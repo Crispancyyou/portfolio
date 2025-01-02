@@ -1,0 +1,203 @@
+extends layout
+
+block content
+  h1 Joshua Edison Portfolio
+
+  //- Inline CSS
+  style.
+    /* General Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 36px;
+      color: #333;
+    }
+
+    a {
+      color: #00B7FF;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Projects Section */
+    .project-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .project-item {
+      flex: 1 1 calc(50% - 20px); /* Two items per row */
+      max-width: calc(50% - 20px);
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      text-align: center;
+    }
+
+    .project-item h3 {
+      margin-bottom: 10px;
+      font-size: 20px;
+      color: #222;
+    }
+
+    .project-img {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      max-height: 300px;
+      aspect-ratio: 4 / 3; /* Ensures consistent aspect ratio */
+      margin-bottom: 10px;
+      border-radius: 8px;
+      object-fit: cover; /* Ensures the image fills the box while maintaining aspect ratio */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .project-item {
+        flex: 1 1 100%; /* Stack items vertically */
+        max-width: 100%;
+      }
+
+      .project-img {
+        max-width: 100%; /* Adjust image size for mobile */
+        max-height: 200px; /* Adjusted for smaller screens */
+      }
+    }
+
+  //- Introduction Section
+  section.intro
+    h2 About Me
+    img(src="/images/me.jpg", alt="Profile Image", class="profile-img")
+    p 
+      | I am an 
+      strong Electromechanical Engineering Technician 
+      | with a passion for innovation and problem-solving. Alongside my technical background, I am the owner of a self-employed business specializing in 
+      strong full-stack web development. 
+    p 
+      | My expertise spans frontend and backend development, database management, and iOS app development. With a strong foundation in engineering principles and coding, I deliver creative and efficient solutions tailored to individual and business needs.
+    p 
+      | This portfolio highlights my diverse range of skills and projects, showcasing my ability to bridge the gap between engineering and modern software development.
+
+  //- Projects Section
+  section.projects
+    h2 Projects
+    div.project-grid
+      div.project-item
+        h3 Ponderpox.ca
+        img(src="/images/ponderpox.PNG", alt="Ponderpox Project Image", class="project-img")
+        p Developed an advanced waiting list management system with features such as:
+          ul
+            li Secure payment processing with automated email notifications and personalized links.
+            li Real-time live chat functionality for instant messaging between users and artists.
+            li Backend system to manage user data, queue prioritization, and status tracking.
+            li Responsive user interface ensuring a seamless experience across devices.
+        p Utilized technologies including GitHub for version control, Node.js for backend development, domain management tools, and Nodemailer for automated email services.
+        p 
+          | View Project: 
+          a(href="https://ponderpox.ca", target="_blank") ponderpox.ca
+
+      div.project-item
+        h3 Scanhaven.com
+        img(src="/images/scanhaven.PNG", alt="Scanhaven Project Image", class="project-img")
+        p Built a corporate website using Node.js, supporting multiple services and functionalities. Key features include:
+          ul
+            li Integrated Nodemailer for automated and secure email communications.
+            li Designed a user-friendly interface to showcase services and goals.
+            li Created and integrated a prototype of proprietary software.
+            li Developed backend systems for efficient data management and user interactions.
+        p A prototype for proprietary software can be accessed at: 
+          a(href="https://www.scanhaven.com/osisko", target="_blank") https://www.scanhaven.com/osisko
+        p 
+          | View Project: 
+          a(href="https://scanhaven.com", target="_blank") scanhaven.com
+
+
+
+      div.project-item
+        h3 ArrangeRush (iOS App)
+        img(src="/images/arrangerush.png", alt="ArrangeRush Project Image", class="project-img")
+        p Designed and developed a mobile app to help users organize and prioritize tasks:
+          ul
+            li Features an intuitive user interface and seamless task management functionality.
+        p View on App Store: 
+          a(href="https://apps.apple.com/ca/app/arrangerush/id6475200764?platform=ipad", target="_blank") ArrangeRush (iOS App)
+
+    //- Inline JavaScript for Dynamic Layout
+    script.
+      document.addEventListener("DOMContentLoaded", function() {
+        const projectGrid = document.querySelector(".project-grid");
+        const projectItems = document.querySelectorAll(".project-item");
+
+        const adjustGrid = () => {
+          const isMobile = window.innerWidth <= 768;
+          projectItems.forEach(item => {
+            item.style.flex = isMobile ? "1 1 100%" : "1 1 calc(50% - 20px)";
+            item.style.maxWidth = isMobile ? "100%" : "calc(50% - 20px)";
+          });
+        };
+
+        window.addEventListener("resize", adjustGrid);
+        adjustGrid();
+      });
+
+  //- General Web Development Section
+  //- General Web Development Section
+  section.web-dev
+    h2 General Web Development
+    p I have completed numerous projects across all aspects of web development, including the development of a custom workflow optimization program for Ontario Power Generation (OPG). This program was designed to enhance efficiency, safety, and collaboration by:
+      ul
+        li Automating routing sheet creation, significantly reducing manual workload and ensuring consistent accuracy.
+        li Providing streamlined access to engineering drawings and related documents for cross-departmental teams.
+        li Cross-checking and validating assignments to ensure no two individuals were working on the same drawing simultaneously, preventing conflicts and redundancies.
+        li Implementing safety checks to verify that future revisions had not already been created, safeguarding against errors in version control.
+        li Performing complex calculations and advanced data analysis to optimize workflows and support decision-making processes.
+        li Offering a user-friendly interface that enabled non-technical staff to navigate and utilize the system effectively, enhancing overall productivity.
+    p My expertise also includes:
+      ul
+        li Full-stack development (frontend and backend) with technologies such as Node.js, PHP, and Python.
+        li Database design and management, particularly SQL, integrated into web applications for robust data handling.
+        li Creating responsive and interactive user interfaces using modern frontend technologies to deliver engaging user experiences.
+
+
+
+  //- Skills Section
+  section.skills
+    h2 Skills
+    ul
+      li Programming Languages: JavaScript (Node.js), Python, PHP, Swift (iOS), SQL, C++, HTML, CSS.
+      li Frameworks & Tools: Express.js, React, MongoDB, RESTful APIs, Xcode, AutoCAD.
+      li Web Development: Full-stack, database integration, API development, and responsive design.
+      li iOS Development: App design, Swift programming, and user interface optimization.
+      li Engineering Design: AutoCAD, PCB creation, and technical problem-solving.
+
+  //- Contact Section
+  section.contact(style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px auto; max-width: 800px; text-align: center; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);")
+    h2(style="font-size: 24px; margin-bottom: 15px; color: #333;") Contact Me
+    p(style="font-size: 16px; margin-bottom: 15px; color: #555;")
+      | If you’d like to collaborate or learn more about my work, feel free to reach out:
+    ul(style="list-style: none; padding: 0;")
+      li(style="font-size: 16px; margin: 10px 0;")
+        | Email: 
+        a(href="mailto:joshuabedison@gmail.com", style="color: #00B7FF; font-weight: bold; text-decoration: none;") joshuabedison@gmail.com
+      li(style="font-size: 16px; margin: 10px 0;")
+        | Phone: 289-991-3165
+      li(style="font-size: 16px; margin: 10px 0;")
+        | LinkedIn: 
+        a(href="https://www.linkedin.com/in/joshua-edison-96670b1b4/", target="_blank", style="color: #00B7FF; font-weight: bold; text-decoration: none;") LinkedIn Profile
+
