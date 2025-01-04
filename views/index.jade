@@ -95,22 +95,35 @@ block content
       | This portfolio highlights my diverse range of skills and projects, showcasing my ability to bridge the gap between engineering and modern software development.
 
 
+
     //- General Web Development Section
     section.web-dev
       h2 General Web Development
-      p I have completed numerous projects across all aspects of web development, including the development of a custom workflow optimization program for Ontario Power Generation (OPG). This program was designed to enhance efficiency, safety, and collaboration by:
-        ul
-          li Automating routing sheet creation, significantly reducing manual workload and ensuring consistent accuracy.
-          li Providing streamlined access to engineering drawings and related documents for cross-departmental teams.
-          li Cross-checking and validating assignments to ensure no two individuals were working on the same drawing simultaneously, preventing conflicts and redundancies.
-          li Implementing safety checks to verify that future revisions had not already been created, safeguarding against errors in version control.
-          li Performing complex calculations and advanced data analysis to optimize workflows and support decision-making processes.
-          li Offering a user-friendly interface that enabled non-technical staff to navigate and utilize the system effectively, enhancing overall productivity.
+      p 
+        | I have completed numerous projects across all aspects of web development, including the development of a 
+        strong custom workflow optimization program 
+        | for Ontario Power Generation (OPG). Built with a 
+        strong Python Flask 
+        | backend, 
+        strong HTML/CSS/JavaScript 
+        | frontend, a 
+        strong SQLite 
+        | database, and integrated 
+        strong API 
+        | data access, this program was designed to enhance efficiency, safety, and collaboration by:
+      ul
+        li Automating routing sheet creation, significantly reducing manual workload and ensuring consistent accuracy.
+        li Providing streamlined access to engineering drawings and related documents for cross-departmental teams.
+        li Cross-checking and validating assignments to ensure no two individuals were working on the same drawing simultaneously, preventing conflicts and redundancies.
+        li Implementing safety checks to verify that future revisions had not already been created, safeguarding against errors in version control.
+        li Performing complex calculations and advanced data analysis to optimize workflows and support decision-making processes.
+        li Offering a user-friendly interface that enabled non-technical staff to navigate and utilize the system effectively, enhancing overall productivity.
       p My expertise also includes:
         ul
-          li Full-stack development (frontend and backend) with technologies such as Node.js, PHP, and Python.
+          li Full-stack development (frontend and backend) with languages such as Node.js, PHP, and Python.
           li Database design and management, particularly SQL, integrated into web applications for robust data handling.
           li Creating responsive and interactive user interfaces using modern frontend technologies to deliver engaging user experiences.
+
 
     //- Skills Section
     section.skills
@@ -122,10 +135,19 @@ block content
         li iOS Development: App design, Swift programming, and user interface optimization.
         li Engineering Design: AutoCAD, PCB creation, and technical problem-solving.
 
+    //- Resume Section
+    section.resume
+      h2 My Full Resume
+      p 
+        | For more details on my experience, skills, and credentials, feel free to check out my 
+        a(href="https://docs.google.com/document/d/1WM5EtlhMNa0FL8qgsCRmdT31Tpjh8Aji/edit?usp=sharing&ouid=110343486672804345906&rtpof=true&sd=true", target="_blank") 
+          | full resume
+        |  on Google Docs.
+
 
   //- Projects Section
   section.projects
-    h2 Projects
+    h2 Offical Projects
     div.project-grid
       div.project-item
         h3 Ponderpox.ca
@@ -165,6 +187,20 @@ block content
         p View on App Store: 
           a(href="https://apps.apple.com/ca/app/arrangerush/id6475200764?platform=ipad", target="_blank") ArrangeRush (iOS App)
 
+  //- Personal Projects Section
+  section.personal-projects
+    h2 Personal Projects
+    .project-grid
+      .project-item
+        h3 Project Title 1
+        img(src="/images/personal1.jpg", alt="Personal Project Image", class="project-img")
+        p A brief description of your personal project. 
+          //- For example, details about the tech stack, purpose, or interesting learnings.
+
+      .project-item
+        h3 Project Title 2
+        img(src="/images/personal2.jpg", alt="Personal Project Image", class="project-img")
+        p Another description for a personal project.
 
     //- Inline JavaScript for Dynamic Layout
     script.
