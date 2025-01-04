@@ -265,6 +265,12 @@ section p {
   height: auto;
   margin-bottom: 15px;
 }
+  /* Override paragraph spacing within .project-item */
+.project-item p {
+  margin: 0.5rem 0;
+}
+
+
 @media (max-width: 1024px) {
   section {
     padding: 15px 20px;

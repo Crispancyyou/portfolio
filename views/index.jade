@@ -67,12 +67,23 @@ block content
       object-fit: cover; /* Ensures the image fills the box while maintaining aspect ratio */
     }
 
+    .project-item p, .project-item a {
+      margin: 0.5rem 0; /* Adjust the spacing */
+      display: block; /* Ensures each paragraph and link is treated as a block element */
+    }
+
     /* Responsive Design */
     @media (max-width: 768px) {
       .project-item {
         flex: 1 1 100%; /* Stack items vertically */
         max-width: 100%;
       }
+      
+      .project-item p, .project-item a {
+        margin: 0.5rem 0; /* Adjust the spacing */
+        display: block; /* Ensures each paragraph and link is treated as a block element */
+      }
+
 
       .project-img {
         max-width: 100%; /* Adjust image size for mobile */
@@ -86,7 +97,7 @@ block content
     img(src="/images/me.jpg", alt="Profile Image", class="profile-img")
     p 
       | I am an 
-      strong Electromechanical Engineering Technician 
+      strong Electromechanical Engineering Technician Student 
       | with a passion for innovation and problem-solving. Alongside my technical background, I am the owner of a self-employed business specializing in 
       strong full-stack web development. 
     p 
@@ -172,7 +183,7 @@ block content
             li Designed a user-friendly interface to showcase services and goals.
             li Created and integrated a prototype of proprietary software.
             li Developed backend systems for efficient data management and user interactions.
-        p A prototype for proprietary software can be accessed at: 
+        p A prototype of the software can be accessed at: 
           a(href="https://www.scanhaven.com/osisko", target="_blank") https://www.scanhaven.com/osisko
         p 
           | View Project: 
@@ -187,20 +198,26 @@ block content
         p View on App Store: 
           a(href="https://apps.apple.com/ca/app/arrangerush/id6475200764?platform=ipad", target="_blank") ArrangeRush (iOS App)
 
+
   //- Personal Projects Section
   section.personal-projects
     h2 Personal Projects
     .project-grid
       .project-item
-        h3 Project Title 1
-        img(src="/images/personal1.jpg", alt="Personal Project Image", class="project-img")
-        p A brief description of your personal project. 
-          //- For example, details about the tech stack, purpose, or interesting learnings.
+        h3 Paddle Ball Game
+
+        a(href="https://ponderpox.ca/game" target="_blank" class="project-link")
+          | View the Paddle Ball Game
+        p A test using node.js to create a multiplayer and singleplayer game in web-app format.
+
 
       .project-item
         h3 Project Title 2
-        img(src="/images/personal2.jpg", alt="Personal Project Image", class="project-img")
+        //- Another link for the second project
+        a(href="https://example.com/project-2" target="_blank" class="project-link")
+          | View Project Title 2
         p Another description for a personal project.
+
 
     //- Inline JavaScript for Dynamic Layout
     script.
