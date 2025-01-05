@@ -146,6 +146,17 @@ html(lang="en")
 
   body
 
+
+
+    video.video-background(
+      autoplay,
+      muted,
+      loop,
+      playsinline,
+      disablePictureInPicture,
+      controlsList="nodownload nofullscreen noremoteplayback"
+    )
+
     video.video-background(autoplay, muted, loop)
       source(src="videos/video.mp4" type="video/mp4")
 
