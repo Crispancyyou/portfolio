@@ -1,0 +1,224 @@
+extends layout
+
+block content
+  //--- VIDEO BACKGROUND ---
+  video.video-background(
+    autoplay,
+    muted,
+    loop,
+    playsinline,
+    webkit-playsinline,
+    disablePictureInPicture,
+    controlsList="nodownload nofullscreen noremoteplayback"
+    preload="auto"
+  )
+    source(src="videos/background.mp4" type="video/mp4")
+
+  //--- MAIN CONTAINER ---
+  .about-me-container
+    // Semi-transparent overlay
+    .overlay-rectangle
+
+    //- Introduction Section
+    section.intro
+      h2.section-title About Me
+
+      p
+        | I am an 
+        strong Electromechanical Engineering Technician Student 
+        | with a passion for innovation and problem-solving. Alongside my technical background, I am the owner of a self-employed business specializing in 
+        strong full-stack web development.
+      p 
+        | My expertise spans frontend and backend development, database management, and iOS app development. With a strong foundation in engineering principles and coding, I deliver creative and efficient solutions tailored to individual and business needs.
+      p 
+        | This portfolio highlights my diverse range of skills and projects, showcasing my ability to bridge the gap between engineering and modern software development.
+
+    //- General Web Development Section
+    section.web-dev
+      h2.section-title General Web Development
+
+      p 
+        | I have completed numerous projects across all aspects of web development, including the development of a 
+        strong custom workflow optimization program 
+        | for Ontario Power Generation (OPG). Built with a 
+        strong Python Flask 
+        | backend, 
+        strong HTML/CSS/JavaScript 
+        | frontend, a 
+        strong SQLite 
+        | database, and integrated 
+        strong API 
+        | data access, this program was designed to enhance efficiency, safety, and collaboration by:
+
+      ul
+        li Automating routing sheet creation, significantly reducing manual workload and ensuring consistent accuracy.
+        li Providing streamlined access to engineering drawings and related documents for cross-departmental teams.
+        li Cross-checking and validating assignments to ensure no two individuals were working on the same drawing simultaneously, preventing conflicts and redundancies.
+        li Implementing safety checks to verify that future revisions had not already been created, safeguarding against errors in version control.
+        li Performing complex calculations and advanced data analysis to optimize workflows and support decision-making processes.
+        li Offering a user-friendly interface that enabled non-technical staff to navigate and utilize the system effectively, enhancing overall productivity.
+
+      p 
+        | My expertise also includes:
+        ul
+          li Full-stack development (frontend and backend) with languages such as Node.js, PHP, and Python.
+          li Database design and management, particularly SQL, integrated into web applications for robust data handling.
+          li Creating responsive and interactive user interfaces using modern frontend technologies to deliver engaging user experiences.
+
+    //- Skills Section
+    section.skills
+      h2.section-title Skills
+
+      ul
+        li Programming Languages: JavaScript (Node.js), Python, PHP, Swift (iOS), SQL, C++, HTML, CSS.
+        li Frameworks & Tools: Express.js, React, MongoDB, RESTful APIs, Xcode, AutoCAD.
+        li Web Development: Full-stack, database integration, API development, and responsive design.
+        li iOS Development: App design, Swift programming, and user interface optimization.
+        li Engineering Design: AutoCAD, PCB creation, and technical problem-solving.
+
+  //--- INLINE STYLES ---
+  style.
+    /* BASIC RESETS */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Allow scrolling */
+    body, html {
+      width: 100%;
+      min-height: 100%;
+      overflow-y: auto;     /* Enable vertical scrolling */
+      font-family: 'Verdana', sans-serif;
+      background: #fff; /* White background */
+      color: #000;      /* Black text */
+    }
+
+    /* VIDEO BACKGROUND */
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    /* MAIN CONTAINER */
+    .about-me-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      /* Ensure there's some extra space at the bottom */
+      margin-bottom: 4rem; 
+    }
+
+    /* OVERLAY: Semi-transparent white so black text is clearly visible */
+    .overlay-rectangle {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.5); 
+      z-index: 0;
+    }
+
+    /* CONTENT ABOVE OVERLAY */
+    .about-me-container > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* SECTION TITLES */
+    .section-title {
+      font-size: 2rem;
+      color: #000; /* Black for headings */
+      text-transform: uppercase;
+      margin: 2rem 0 1rem;
+      letter-spacing: 1px;
+      animation: flicker 2s infinite;
+    }
+
+    /* TEXT & LISTS */
+    section.intro,
+    section.web-dev,
+    section.skills {
+      max-width: 800px;
+      margin-bottom: 2rem;
+    }
+
+    p {
+      margin: 1rem 0;
+      line-height: 1.6;
+      color: #000; /* Ensure paragraphs are black */
+    }
+
+    strong {
+      color: #000; /* Strong text also black */
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 1.5rem; /* Indent list for clarity */
+      text-align: left;     /* Align bullet points left */
+      color: #000;          /* Black list text */
+    }
+
+    ul li {
+      margin: 0.5rem 0;
+      position: relative;
+    }
+
+    /* Black bullets */
+    ul li::before {
+      content: "• "; 
+      color: #000;  /* Black bullet */
+      position: absolute;
+      left: -1.5rem;
+    }
+
+    /* Flicker Animation */
+    @keyframes flicker {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.8;
+      }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .about-me-container {
+        padding: 1rem;
+      }
+    }
+
+  //--- OPTIONAL SCRIPT (for fallback logic) ---
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      const video = document.querySelector('.video-background');
+      
+      // Attempt to ensure video loops even if 'loop' is ignored
+      video.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+      });
+
+      // Attempt to autoplay the muted video on mobile (some devices might still block it)
+      video.play().catch(err => {
+        console.warn('Autoplay blocked on mobile:', err);
+      });
+    });
