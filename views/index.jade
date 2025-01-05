@@ -28,13 +28,13 @@ html(lang="en")
         min-height: 100%;
         width: auto;
         height: auto;
-        z-index: -1;
         object-fit: cover;
+        z-index: -1; /* Ensures video stays behind everything else */
       }
 
       /* Main container */
       .loading-screen-container {
-        position: relative; /* So we can absolutely position the overlay inside */
+        position: relative; /* Allows absolutely positioned children */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -51,8 +51,8 @@ html(lang="en")
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(12, 9, 9, 0.5); /* Gray with 20% opacity */
-        z-index: 0; /* Behind the text */
+        background-color: rgba(12, 9, 9, 0.5); /* Dark overlay at 50% opacity */
+        z-index: 0; /* Behind the text and menu */
       }
 
       /* Ensure text and menu appear above the overlay */
@@ -133,6 +133,17 @@ html(lang="en")
         }
       }
 
+      /* Responsive styling for mobile screens */
+      @media screen and (max-width: 768px) {
+        h1.game-title {
+          font-size: 2rem; /* Smaller heading on mobile */
+        }
+
+        .menu a {
+          font-size: 1.4rem; /* Slightly smaller menu text on mobile */
+        }
+      }
+
   body
 
     video.video-background(autoplay, muted, loop)
@@ -140,6 +151,7 @@ html(lang="en")
 
 
     .loading-screen-container
+
       .overlay-rectangle
 
       h1.game-title Developer Presents
@@ -156,3 +168,14 @@ html(lang="en")
         a(href="/github")
           span.selector
           | GitHub
+
+
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        const video = document.querySelector('.video-background');
+        // Fallback in case 'loop' is not honored by the browser
+        video.addEventListener('ended', function() {
+          this.currentTime = 0;
+          this.play();
+        });
+      });
