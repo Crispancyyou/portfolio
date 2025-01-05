@@ -186,7 +186,13 @@ html(lang="en")
     script.
       document.addEventListener('DOMContentLoaded', function() {
         const video = document.querySelector('.video-background');
-        // Fallback in case 'loop' is not honored by the browser
+        
+        // Attempt to programmatically start video if allowed (some mobile devices require user gesture).
+        video.play().catch(err => {
+          console.warn('Autoplay not allowed by this browser/device:', err);
+        });
+
+        // Fallback in case 'loop' is not honored
         video.addEventListener('ended', function() {
           this.currentTime = 0;
           this.play();
