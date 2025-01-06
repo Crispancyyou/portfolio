@@ -192,16 +192,29 @@ html(lang="en")
 
     script.
       document.addEventListener('DOMContentLoaded', function() {
-        const video = document.querySelector('.video-background');
-        
-        // Attempt to programmatically start video if allowed (some mobile devices require user gesture).
-        video.play().catch(err => {
-          console.warn('Autoplay not allowed by this browser/device:', err);
-        });
+          const video = document.querySelector('.video-background');
+          
+          if (video) {
+              video.muted = true; // Ensure muted
+              video.playsInline = true; // Ensure inline playback
+              video.load(); // Ensure the video is loaded before playing
+              video.play().catch(err => {
+                  console.warn('Autoplay not allowed on this browser/device:', err);
 
-        // Fallback in case 'loop' is not honored
-        video.addEventListener('ended', function() {
-          this.currentTime = 0;
-          this.play();
-        });
+                  // Fallback: Display a play button
+                  const playButton = document.createElement('button');
+                  playButton.textContent = 'Play Video';
+                  playButton.style.position = 'absolute';
+                  playButton.style.top = '50%';
+                  playButton.style.left = '50%';
+                  playButton.style.transform = 'translate(-50%, -50%)';
+                  playButton.style.zIndex = '2';
+                  playButton.addEventListener('click', () => {
+                      video.play();
+                      playButton.remove();
+                  });
+                  document.body.appendChild(playButton);
+              });
+          }
       });
+
