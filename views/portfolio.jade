@@ -1,32 +1,74 @@
 extends layout
 
 block content
-  h1 Portfolio
-
-  //- Inline CSS
+  //- --------------------------
+  //- Combined Style
+  //- --------------------------
   style.
-    /* General Styles */
-    body {
+    /* Basic resets */
+    * {
       margin: 0;
       padding: 0;
-      font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background-color: #f9f9f9;
+      box-sizing: border-box;
     }
 
-    h1 {
+    /* Use 'Verdana' as in the video background snippet */
+    body, html {
+      width: 100%;
+      min-height: 100%; /* Ensure body grows with content */
+      font-family: 'Verdana', sans-serif;
+      background-color: transparent; /* So we see the video behind */
+      overflow-y: auto; /* Allow the browser window to scroll normally */
+    }
+
+    /* Video Background */
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: cover;
+      z-index: -1; /* Ensures video stays behind everything else */
+    }
+
+    /* Main container for the entire portfolio */
+    .loading-screen-container {
+      position: relative; /* Allows absolutely positioned children */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
-      margin-top: 20px;
-      font-size: 36px;
-      color: #333;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* Dark overlay above the video */
+    .overlay-rectangle {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(12, 9, 9, 0.5); /* 50% black overlay */
+      z-index: 0;
+    }
+
+    /* -------------------
+       Portfolio Styles
+    ------------------- */
+
+    /* Make all headings red! */
+    h1, h2, h3, h4, h5, h6 {
+      color: #f00 !important;
     }
 
     a {
       color: #00B7FF;
       text-decoration: none;
     }
-
     a:hover {
       text-decoration: underline;
     }
@@ -38,10 +80,12 @@ block content
       gap: 20px;
       justify-content: center;
       margin-top: 20px;
+      padding: 0 20px; /* Add side padding so items don't touch the edges */
+      z-index: 2;      /* Ensure these float above the overlay */
     }
 
     .project-item {
-      flex: 1 1 calc(50% - 20px); /* Two items per row */
+      flex: 1 1 calc(50% - 20px);
       max-width: calc(50% - 20px);
       background: #fff;
       border-radius: 8px;
@@ -53,7 +97,7 @@ block content
     .project-item h3 {
       margin-bottom: 10px;
       font-size: 20px;
-      color: #222;
+      /* color overridden by global heading override above */
     }
 
     .project-img {
@@ -64,12 +108,24 @@ block content
       aspect-ratio: 4 / 3; /* Ensures consistent aspect ratio */
       margin-bottom: 10px;
       border-radius: 8px;
-      object-fit: cover; /* Ensures the image fills the box while maintaining aspect ratio */
+      object-fit: cover;
     }
 
-    .project-item p, .project-item a {
-      margin: 0.5rem 0; /* Adjust the spacing */
-      display: block; /* Ensures each paragraph and link is treated as a block element */
+    .project-item p,
+    .project-item a {
+      margin: 0.5rem 0;
+      display: block;
+    }
+
+    /* Make “Personal Projects” section fully visible above overlay */
+    section.personal-projects {
+      position: relative;
+      z-index: 2;
+      background-color: #fff; /* White background so it's not dimmed by the overlay */
+      border-radius: 8px;
+      margin: 40px auto; /* Center with top/bottom spacing */
+      max-width: 1200px; /* Wider container if desired */
+      padding: 20px;     /* Spacing inside the box */
     }
 
     /* Responsive Design */
@@ -78,107 +134,115 @@ block content
         flex: 1 1 100%; /* Stack items vertically */
         max-width: 100%;
       }
-      
-      .project-item p, .project-item a {
-        margin: 0.5rem 0; /* Adjust the spacing */
-        display: block; /* Ensures each paragraph and link is treated as a block element */
+
+      .project-item p,
+      .project-item a {
+        margin: 0.5rem 0;
+        display: block;
       }
 
-
       .project-img {
-        max-width: 100%; /* Adjust image size for mobile */
-        max-height: 200px; /* Adjusted for smaller screens */
+        max-width: 100%;
+        max-height: 200px;
       }
     }
 
+  //- --------------------------
+  //- Video + Overlay
+  //- --------------------------
+  video.video-background(
+    autoplay
+    muted
+    loop
+    playsinline
+    webkit-playsinline
+    disablePictureInPicture
+    controlsList="nodownload nofullscreen noremoteplayback"
+    preload="auto"
+  )
+    source(src="videos/video.mp4" type="video/mp4")
+
+  .loading-screen-container
+    .overlay-rectangle
 
 
+    //- Projects Section
+    section.projects
+      h2 Offical Projects
+      .project-grid
+        .project-item
+          h3 Ponderpox.ca
+          img.project-img(src="/images/ponderpox.PNG" alt="Ponderpox Project Image")
+          p Developed an advanced waiting list management system with features such as:
+            ul(style="list-style: disc outside; padding-left: 40px; text-align: left;")
+              li Secure payment processing with automated email notifications and personalized links.
+              li Real-time live chat functionality for instant messaging between users and artists.
+              li Backend system to manage user data, queue prioritization, and status tracking.
+              li Responsive user interface ensuring a seamless experience across devices.
+          p Utilized technologies including GitHub for version control, Node.js for backend development, domain management tools, and Nodemailer for automated email services.
+          p
+            | View Project:
+            a(href="https://ponderpox.ca" target="_blank") ponderpox.ca
 
+        .project-item
+          h3 Scanhaven.com
+          img.project-img(src="/images/scanhaven.PNG" alt="Scanhaven Project Image")
+          p Built a corporate website using Node.js, supporting multiple services and functionalities. Key features include:
+            ul(style="list-style: disc outside; padding-left: 40px; text-align: left;")
+              li Integrated Nodemailer for automated and secure email communications.
+              li Designed a user-friendly interface to showcase services and goals.
+              li Created and integrated a prototype of proprietary software.
+              li Developed backend systems for efficient data management and user interactions.
+          p A prototype of the software can be accessed at:
+            a(href="https://www.scanhaven.com/osisko" target="_blank") https://www.scanhaven.com/osisko
+          p
+            | View Project:
+            a(href="https://scanhaven.com" target="_blank") scanhaven.com
 
-  //- Projects Section
-  section.projects
-    h2 Offical Projects
-    div.project-grid
-      div.project-item
-        h3 Ponderpox.ca
-        img(src="/images/ponderpox.PNG", alt="Ponderpox Project Image", class="project-img")
-        p Developed an advanced waiting list management system with features such as:
-          ul(style="list-style: disc outside; padding-left: 40px; text-align: left;")
-            li Secure payment processing with automated email notifications and personalized links.
-            li Real-time live chat functionality for instant messaging between users and artists.
-            li Backend system to manage user data, queue prioritization, and status tracking.
-            li Responsive user interface ensuring a seamless experience across devices.
-        p Utilized technologies including GitHub for version control, Node.js for backend development, domain management tools, and Nodemailer for automated email services.
-        p 
-          | View Project: 
-          a(href="https://ponderpox.ca", target="_blank") ponderpox.ca
+        .project-item
+          h3 ArrangeRush (iOS App)
+          img.project-img(src="/images/Capture.JPG" alt="ArrangeRush Project Image")
+          p Designed and developed a 2D number-based mobile game inspired by popular games like 2048, built using Unity and exported to iOS:
+            ul(style="list-style: disc outside; padding-left: 40px; text-align: left;")
+              li Includes multiple game modes to keep players engaged with varying challenges.
+              li Features smooth animations and visually appealing graphics to enhance user experience.
+              li Simple and intuitive gameplay mechanics designed to appeal to a wide audience.
+              li Incorporates advertisements for monetization, implemented seamlessly within the app.
+              li Designed with a responsive user interface for optimal experience across iPhone and iPad devices.
+          p The app offers a casual gaming experience with engaging mechanics, perfect for quick play sessions.
+          p View on App Store:
+            a(href="https://apps.apple.com/ca/app/arrangerush/id6475200764?platform=ipad" target="_blank") ArrangeRush (iOS App)
 
-      div.project-item
-        h3 Scanhaven.com
-        img(src="/images/scanhaven.PNG", alt="Scanhaven Project Image", class="project-img")
-        p Built a corporate website using Node.js, supporting multiple services and functionalities. Key features include:
-          ul(style="list-style: disc outside; padding-left: 40px; text-align: left;")
-            li Integrated Nodemailer for automated and secure email communications.
-            li Designed a user-friendly interface to showcase services and goals.
-            li Created and integrated a prototype of proprietary software.
-            li Developed backend systems for efficient data management and user interactions.
-        p A prototype of the software can be accessed at: 
-          a(href="https://www.scanhaven.com/osisko", target="_blank") https://www.scanhaven.com/osisko
-        p 
-          | View Project: 
-          a(href="https://scanhaven.com", target="_blank") scanhaven.com
+        .project-item
+          h3 Dramaticraft Community Website
+          img.project-img(src="/images/dramaticraft.JPG" alt="Dramaticraft Project Image")
+          p Created a community website for a Minecraft server to enhance user interaction and engagement:
+            ul(style="list-style: disc outside; padding-left: 40px; text-align: left;")
+              li Designed and developed using Apache, PHP, HTML, CSS, and JavaScript.
+              li Integrated with a MariaDB database for user accounts, forums, and server stats management.
+              li Utilized phpMyAdmin for efficient database administration and troubleshooting.
+              li Built an intuitive forum and user management system tailored to community needs.
+              li Ensured responsive design for seamless use across all devices.
+          p Hosted on a Linux server running MariaDB version 10.6.18 for efficient and secure database operations.
+          p
+            | View Project:
+            a(href="https://www.dramaticraft.com/" target="_blank") dramaticraft.com
 
-      div.project-item
-        h3 ArrangeRush (iOS App)
-        img(src="/images/Capture.JPG", alt="ArrangeRush Project Image", class="project-img")
-        p Designed and developed a 2D number-based mobile game inspired by popular games like 2048, built using Unity and exported to iOS:
-          ul(style="list-style: disc outside; padding-left: 40px; text-align: left;")
-            li Includes multiple game modes to keep players engaged with varying challenges.
-            li Features smooth animations and visually appealing graphics to enhance user experience.
-            li Simple and intuitive gameplay mechanics designed to appeal to a wide audience.
-            li Incorporates advertisements for monetization, implemented seamlessly within the app.
-            li Designed with a responsive user interface for optimal experience across iPhone and iPad devices.
-        p The app offers a casual gaming experience with engaging mechanics, perfect for quick play sessions.
-        p View on App Store: 
-          a(href="https://apps.apple.com/ca/app/arrangerush/id6475200764?platform=ipad", target="_blank") ArrangeRush (iOS App)
+    //- Personal Projects Section
+    section.personal-projects
+      h2 Personal Projects
+      .project-grid
+        .project-item
+          h3 Paddle Ball Game
+          a.project-link(href="https://ponderpox.ca/game" target="_blank")
+            | View the Paddle Ball Game
+          p A test using Node.js to create a multiplayer and singleplayer game in web-app format.
 
-
-      div.project-item
-        h3 Dramaticraft Community Website
-        img(src="/images/dramaticraft.JPG", alt="Dramaticraft Project Image", class="project-img")
-        p Created a community website for a Minecraft server to enhance user interaction and engagement:
-          ul(style="list-style: disc outside; padding-left: 40px; text-align: left;")
-            li Designed and developed using Apache, PHP, HTML, CSS, and JavaScript.
-            li Integrated with a MariaDB database for user accounts, forums, and server stats management.
-            li Utilized phpMyAdmin for efficient database administration and troubleshooting.
-            li Built an intuitive forum and user management system tailored to community needs.
-            li Ensured responsive design for seamless use across all devices.
-        p Hosted on a Linux server running MariaDB version 10.6.18 for efficient and secure database operations.
-        p 
-          | View Project: 
-          a(href="https://www.dramaticraft.com/", target="_blank") dramaticraft.com
-
-
-
-  //- Personal Projects Section
-  section.personal-projects
-    h2 Personal Projects
-    .project-grid
-      .project-item
-        h3 Paddle Ball Game
-
-        a(href="https://ponderpox.ca/game" target="_blank" class="project-link")
-          | View the Paddle Ball Game
-        p A test using node.js to create a multiplayer and singleplayer game in web-app format.
-
-
-      .project-item
-        h3 Icloud Downloader
-        //- Another link for the second project
-        a(href="https://icloud-vy7f.onrender.com/" target="_blank" class="project-link")
-          | View ICloud Downloader
-        p Built to Mass Export Icloud Photos into a downloadable zip in a secure way (must use 2fa).
-
+        .project-item
+          h3 Icloud Downloader
+          a.project-link(href="https://icloud-vy7f.onrender.com/" target="_blank")
+            | View ICloud Downloader
+          p Built to Mass Export iCloud Photos into a downloadable zip in a secure way (must use 2FA).
 
     //- Inline JavaScript for Dynamic Layout
     script.
@@ -197,19 +261,3 @@ block content
         window.addEventListener("resize", adjustGrid);
         adjustGrid();
       });
-
-
-
-  //- Contact Section
-  section.contact(style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px auto; max-width: 800px; text-align: center; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);")
-    h2(style="font-size: 24px; margin-bottom: 15px; color: #333;") Contact Me
-    p(style="font-size: 16px; margin-bottom: 15px; color: #555;")
-      | If you’d like to collaborate or learn more about my work, feel free to reach out:
-    ul(style="list-style: none; padding: 0;")
-      li(style="font-size: 16px; margin: 10px 0;")
-        | Email: 
-        a(href="mailto:joshuabedison@gmail.com", style="color: #00B7FF; font-weight: bold; text-decoration: none;") joshuabedison@gmail.com
-      li(style="font-size: 16px; margin: 10px 0;")
-        | LinkedIn: 
-        a(href="https://www.linkedin.com/in/joshua-edison-96670b1b4/", target="_blank", style="color: #00B7FF; font-weight: bold; text-decoration: none;") LinkedIn Profile
-

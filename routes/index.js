@@ -16,4 +16,11 @@ router.get('/aboutme', function(req, res, next) {
   res.render('aboutme', { title: 'About me' });
 });
 
+/* GET aboutme page. */
+router.get('/contact', function(req, res, next) {
+  res.render('contact', { title: 'Contact' });
+});
+
+
+
 module.exports = router;
