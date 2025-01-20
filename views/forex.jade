@@ -1,0 +1,143 @@
+doctype html
+html
+  head
+    title= title
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+
+    // Bootstrap CSS
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css')
+
+    style.
+      /* Custom styling for the chart container */
+      #chart-container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 15px;
+        border: 1px solid #ccc;
+        background: #f8f9fa;
+      }
+
+  body
+    .container.my-4
+      h1.text-center #{title}
+      p.text-muted.text-center
+        | This chart pulls data every 60 seconds from 
+        code /forex/history
+        |, which reads 
+        code forex_history.txt 
+        | for all recorded data points.
+
+      // Timeframe selection row
+      .row.mb-3
+        .col.text-center
+          label(for="timeframe" class="me-2") Select Timeframe:
+          select#timeframe.form-select.d-inline-block(style="width: 200px;")
+            option(value="all") Show All
+            option(value="30") Last 30
+            option(value="50") Last 50
+            option(value="100") Last 100
+
+      // Chart area
+      #chart-container
+        canvas#forex-chart(width="800", height="400")
+
+    // Load Chart.js from CDN
+    script(src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js")
+
+    script.
+      // Fetch the entire history from /forex/history
+      async function fetchForexHistory() {
+        try {
+          const response = await fetch("/forex/history");
+          if (!response.ok) throw new Error("Failed to fetch forex history");
+          return await response.json(); 
+        } catch (error) {
+          console.error("Error fetching forex history:", error);
+          return [];
+        }
+      }
+
+      // Create the Chart.js chart
+      function createChart(ctx) {
+        return new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "EUR/USD Close",
+                data: [],
+                borderColor: "rgba(75, 192, 192, 1)",
+                tension: 0.1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: { title: { display: true, text: "Time" } },
+              y: { title: { display: true, text: "Price" } },
+            },
+          },
+        });
+      }
+
+      // Given all history data, filter by timeframe setting
+      function filterHistoryByTimeframe(historyArray, timeframe) {
+        if (timeframe === "all") {
+          return historyArray;
+        }
+        const limit = parseInt(timeframe, 10);
+        if (isNaN(limit)) {
+          return historyArray;
+        }
+        // Return only the last 'limit' entries
+        return historyArray.slice(-limit);
+      }
+
+      // Update the chart using the entire or filtered history
+      function updateChartFromHistory(chart, historyArray, timeframe) {
+        // Clear the chart data
+        chart.data.labels = [];
+        chart.data.datasets[0].data = [];
+
+        // Filter the array based on timeframe selection
+        const filteredData = filterHistoryByTimeframe(historyArray, timeframe);
+
+        // Populate the chart
+        filteredData.forEach(entry => {
+          // Convert the timestamp to a more readable time
+          const timeLabel = new Date(entry.timestamp).toLocaleTimeString();
+          chart.data.labels.push(timeLabel);
+          chart.data.datasets[0].data.push(entry.C);
+        });
+
+        chart.update();
+      }
+
+      // Main init function
+      async function initForexChart() {
+        const ctx = document.getElementById("forex-chart").getContext("2d");
+        const chart = createChart(ctx);
+
+        const timeframeSelect = document.getElementById("timeframe");
+
+        // Function to load + update chart
+        async function reloadChartData() {
+          const historyArray = await fetchForexHistory();
+          const timeframe = timeframeSelect.value; // e.g. 'all', '30', '50', '100'
+          updateChartFromHistory(chart, historyArray, timeframe);
+        }
+
+        // On load, fetch + render
+        await reloadChartData();
+
+        // Refresh every 60 seconds
+        setInterval(reloadChartData, 10000);
+
+        // Also, if user changes timeframe manually, reload
+        timeframeSelect.addEventListener("change", reloadChartData);
+      }
+
+      document.addEventListener("DOMContentLoaded", initForexChart);
