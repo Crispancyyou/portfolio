@@ -37,6 +37,7 @@ function appendToHistory(newData) {
 
 /**
  * Get Chromium executable path based on the OS
+ * Ensures permissions are set correctly for Linux binary
  */
 function getChromiumPath() {
   const platform = process.platform; // 'linux', 'win32', 'darwin'
@@ -46,6 +47,14 @@ function getChromiumPath() {
       __dirname,
       "static-chromium/chrome/ungoogled-chromium_131.0.6778.244_1.vaapi_linux/chrome"
     );
+
+    // Set executable permissions for the Linux binary
+    try {
+      fs.chmodSync(linuxPath, "755"); // rwxr-xr-x
+      console.log(`Permissions set for: ${linuxPath}`);
+    } catch (err) {
+      console.error(`Failed to set permissions for ${linuxPath}:`, err);
+    }
 
     if (fs.existsSync(linuxPath)) {
       return linuxPath;
