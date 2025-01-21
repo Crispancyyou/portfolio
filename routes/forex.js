@@ -18,7 +18,7 @@ const forexCache = {
 const HISTORY_FILE = path.join(__dirname, "forex_history.txt");
 
 /**
- * Make sure the file exists; if not, create it empty.
+ * Ensure the history file exists
  */
 function ensureHistoryFileExists() {
   if (!fs.existsSync(HISTORY_FILE)) {
@@ -27,13 +27,45 @@ function ensureHistoryFileExists() {
 }
 
 /**
- * Appends the new data to the history file, *every time* a new response is intercepted.
- * This will log *all* data points (including duplicates) to track each update in time.
+ * Append new data to the history file
  */
 function appendToHistory(newData) {
   ensureHistoryFileExists();
   fs.appendFileSync(HISTORY_FILE, JSON.stringify(newData) + "\n", "utf8");
   console.log("Appended new data to history file:", newData);
+}
+
+/**
+ * Get Chromium executable path based on the OS
+ */
+function getChromiumPath() {
+  const platform = process.platform; // 'linux', 'win32', 'darwin'
+
+  if (platform === "linux") {
+    const linuxPath = path.resolve(
+      __dirname,
+      "static-chromium/chrome/ungoogled-chromium_131.0.6778.244_1.vaapi_linux/chrome"
+    );
+
+    if (fs.existsSync(linuxPath)) {
+      return linuxPath;
+    } else {
+      throw new Error(`Linux Chromium binary not found at ${linuxPath}`);
+    }
+  } else if (platform === "win32") {
+    const windowsPath = path.resolve(
+      __dirname,
+      "static-chromium/chrome/win64-130.0.6723.116/chrome-win64/chrome.exe"
+    );
+
+    if (fs.existsSync(windowsPath)) {
+      return windowsPath;
+    } else {
+      throw new Error(`Windows Chromium binary not found at ${windowsPath}`);
+    }
+  } else {
+    throw new Error(`Unsupported platform: ${platform}`);
+  }
 }
 
 // Main function that Puppeteer uses to scrape the actual data
@@ -42,8 +74,12 @@ async function scrapeForexData() {
 
   let browser;
   try {
+    const chromiumPath = getChromiumPath();
+    console.log(`Using Chromium from: ${chromiumPath}`);
+
     browser = await puppeteer.launch({
       headless: true,
+      executablePath: chromiumPath, // Use the determined Chromium path
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
@@ -53,13 +89,13 @@ async function scrapeForexData() {
 
     const page = await browser.newPage();
 
-    // Spoof a real user-agent
+    // Set a real user-agent
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
         "(KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
     );
 
-    // Block images & fonts for speed
+    // Block unnecessary resources
     await page.setRequestInterception(true);
     page.on("request", (req) => {
       const resourceType = req.resourceType();
@@ -72,63 +108,32 @@ async function scrapeForexData() {
 
     let receivedData = false;
 
-    // ---- Listen for XHR/Fetch responses matching the actual live data feed ----
+    // Listen for specific responses
     page.on("response", async (response) => {
       try {
         const respUrl = response.url();
-
-        // Adjust this substring to match EXACT request from DevTools
-        // e.g. "/quotes?symbols=Real-time%20Currencies%20%3AEUR%2FUSD"
         if (respUrl.includes("/quotes?symbols=Real-time%20Currencies%20%3AEUR%2FUSD")) {
           console.log("Intercepted target response:", respUrl);
 
-          // Parse the JSON
           const json = await response.json();
-
-          // Should match the structure you mentioned:
-          // {
-          //   "s":"ok",
-          //   "d":[
-          //     {
-          //       "s":"ok",
-          //       "n":"Real-time Currencies :EUR/USD",
-          //       "v":{
-          //         "ch":"0.0112",
-          //         "chp":"1.09",
-          //         "short_name":"EUR/USD",
-          //         "lp":"1.0394",
-          //         "open_price":"1.0299",
-          //         "high_price":"1.0430",
-          //         "low_price":"1.0267",
-          //         "prev_close_price":"1.0282",
-          //         ...
-          //       }
-          //     }
-          //   ]
-          // }
-
           if (json && json.d && Array.isArray(json.d) && json.d.length > 0) {
             const item = json.d[0];
             const v = item?.v || null;
 
             if (v) {
-              // Build your data object
               const newData = {
                 O: parseFloat(v.open_price),
                 H: parseFloat(v.high_price),
                 L: parseFloat(v.low_price),
-                C: parseFloat(v.lp), // last price
+                C: parseFloat(v.lp), // Last price
                 timestamp: new Date().toISOString(),
               };
 
-              // Save in memory for immediate use
               forexCache.data = newData;
               forexCache.lastUpdated = Date.now();
               receivedData = true;
 
               console.log("Got live data from real response:", newData);
-
-              // APPEND THIS DATA POINT EVERY TIME
               appendToHistory(newData);
             }
           }
@@ -138,29 +143,23 @@ async function scrapeForexData() {
       }
     });
 
-    // ---- Navigate to the actual page ----
+    // Navigate to the page
     console.log("Navigating to URL:", url);
     await page.goto(url, { waitUntil: "networkidle2" });
 
-    // Some sites need you to accept cookies (if a banner appears)
+    // Handle cookie banners
     try {
       await page.click('button[id^="onetrust-accept-btn"]', { timeout: 3000 });
       console.log("Clicked cookie consent");
-    } catch (err) {
-      // No banner or cannot click
-    }
+    } catch (err) {}
 
-    // Wait a bit for the XHR request to fire and respond
     await page.waitForTimeout(5000);
-
     await browser.close();
 
-    // Validate we actually got data
     if (!receivedData || !forexCache.data) {
-      throw new Error("No real-time data intercepted. Possibly the request was never made.");
+      throw new Error("No real-time data intercepted.");
     }
 
-    // Ensure we have all 4 fields
     const { O, H, L, C } = forexCache.data;
     if (!O || !H || !L || !C) {
       throw new Error("Got data, but missing O/H/L/C fields.");
@@ -174,7 +173,7 @@ async function scrapeForexData() {
   }
 }
 
-// This loop just keeps re-running the scrape every 30 seconds
+// Start the scraping loop
 async function startScrapingLoop() {
   while (true) {
     try {
@@ -186,10 +185,9 @@ async function startScrapingLoop() {
   }
 }
 
-// Immediately start the loop
 startScrapingLoop();
 
-// Express route to return the current data
+// Express route to get the current data
 router.get("/", (req, res) => {
   if (!forexCache.data) {
     return res.status(503).json({ error: "No forex data available yet." });
