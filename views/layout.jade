@@ -2,8 +2,33 @@ doctype html
 html
   head
     meta(charset="utf-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+
+    //- Page Title
     title #{pageTitle || 'Joshua Edison'}
-    link(rel='stylesheet', href='/stylesheets/style.css')
+
+    //- Favicon & App Icons (Works Locally & On Server)
+    link(rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png")
+    link(rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png")
+    link(rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png")
+    link(rel="icon" type="image/x-icon" href="/images/favicon.ico")
+
+    //- Open Graph Meta Tags (For Google & Social Media)
+    meta(property="og:title" content="Joshua Edison - Portfolio")
+    meta(property="og:description" content="Explore my projects and experience.")
+    meta(property="og:image" content="/images/android-chrome-512x512.png")
+    meta(property="og:type" content="website")
+    meta(property="og:locale" content="en_US")
+
+    //- Twitter Card Meta Tags
+    meta(name="twitter:card" content="summary_large_image")
+    meta(name="twitter:title" content="Joshua Edison - Portfolio")
+    meta(name="twitter:description" content="Explore my projects and experience.")
+    meta(name="twitter:image" content="/images/android-chrome-512x512.png")
+
+    //- Stylesheet
+    link(rel="stylesheet" href="/stylesheets/style.css")
+
   body
+    //- Main Content Block
     block content
