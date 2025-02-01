@@ -24,10 +24,8 @@ html(lang="en")
         position: fixed;
         top: 0;
         left: 0;
-        min-width: 100%;
-        min-height: 100%;
-        width: auto;
-        height: auto;
+        width: 100vw;
+        height: 100vh;
         object-fit: cover;
         z-index: -1; /* Ensures video stays behind everything else */
       }
@@ -156,8 +154,6 @@ html(lang="en")
 
   body
 
-
-
     video.video-background(
       autoplay,
       muted,
@@ -168,10 +164,7 @@ html(lang="en")
       controlsList="nodownload nofullscreen noremoteplayback"
       preload="auto"
     )
-
-    video.video-background(autoplay, muted, loop)
       source(src="videos/video.mp4" type="video/mp4")
-
 
     .loading-screen-container
 
@@ -189,32 +182,45 @@ html(lang="en")
           span.selector
           | Contact
 
-
     script.
       document.addEventListener('DOMContentLoaded', function() {
           const video = document.querySelector('.video-background');
-          
+
           if (video) {
               video.muted = true; // Ensure muted
               video.playsInline = true; // Ensure inline playback
-              video.load(); // Ensure the video is loaded before playing
-              video.play().catch(err => {
-                  console.warn('Autoplay not allowed on this browser/device:', err);
+              video.load(); // Ensure video is loaded before playing
 
-                  // Fallback: Display a play button
-                  const playButton = document.createElement('button');
-                  playButton.textContent = 'Play Video';
-                  playButton.style.position = 'absolute';
-                  playButton.style.top = '50%';
-                  playButton.style.left = '50%';
-                  playButton.style.transform = 'translate(-50%, -50%)';
-                  playButton.style.zIndex = '2';
-                  playButton.addEventListener('click', () => {
-                      video.play();
-                      playButton.remove();
+              // Explicitly attempt to play
+              const playPromise = video.play();
+
+              if (playPromise !== undefined) {
+                  playPromise.catch(() => {
+                      console.warn('Autoplay blocked. Adding play button.');
+
+                      // Create Play Button
+                      const playButton = document.createElement('button');
+                      playButton.textContent = 'Play Video';
+                      playButton.style.position = 'absolute';
+                      playButton.style.top = '50%';
+                      playButton.style.left = '50%';
+                      playButton.style.transform = 'translate(-50%, -50%)';
+                      playButton.style.zIndex = '2';
+                      playButton.style.padding = '10px 20px';
+                      playButton.style.fontSize = '16px';
+                      playButton.style.cursor = 'pointer';
+                      playButton.style.background = 'rgba(0,0,0,0.7)';
+                      playButton.style.color = '#fff';
+                      playButton.style.border = 'none';
+                      playButton.style.borderRadius = '5px';
+
+                      playButton.addEventListener('click', () => {
+                          video.play();
+                          playButton.remove();
+                      });
+
+                      document.body.appendChild(playButton);
                   });
-                  document.body.appendChild(playButton);
-              });
+              }
           }
       });
-
