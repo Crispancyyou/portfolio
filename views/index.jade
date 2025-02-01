@@ -183,6 +183,7 @@ html(lang="en")
           | Contact
 
     script.
+
       document.addEventListener('DOMContentLoaded', function() {
           const video = document.querySelector('.video-background');
 
@@ -195,12 +196,10 @@ html(lang="en")
               const playPromise = video.play();
 
               if (playPromise !== undefined) {
-                  playPromise.then(() => {
-                      console.log('Autoplay successful');
-                  }).catch(() => {
-                      console.warn('Autoplay blocked. Adding play button.');
+                  playPromise.catch(() => {
+                      console.warn('Autoplay blocked. Hiding fake play button.');
 
-                      // Create Play Button
+                      // Create Hidden Play Button (Trick for Mobile Autoplay)
                       const playButton = document.createElement('button');
                       playButton.textContent = 'Play Video';
                       playButton.style.position = 'absolute';
@@ -216,6 +215,10 @@ html(lang="en")
                       playButton.style.border = 'none';
                       playButton.style.borderRadius = '5px';
 
+                      // Hide the button visually but keep it functional
+                      playButton.style.opacity = '0'; // Makes it invisible
+                      playButton.style.pointerEvents = 'none'; // Prevents interaction
+
                       playButton.addEventListener('click', () => {
                           video.play();
                           playButton.remove();
@@ -226,4 +229,5 @@ html(lang="en")
               }
           }
       });
+
 
