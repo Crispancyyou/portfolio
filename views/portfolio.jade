@@ -1,151 +1,225 @@
 extends layout
 
 block content
-  //- --------------------------
-  //- Combined Style
-  //- --------------------------
+
+  //- Import External Stylesheet
+
+
   style.
-    /* Basic resets */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+      /* Basic resets */
+      * {
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+      }
 
-    /* Use 'Verdana' as in the video background snippet */
-    body, html {
-      width: 100%;
-      min-height: 100%; /* Ensure body grows with content */
-      font-family: 'Verdana', sans-serif;
-      background-color: transparent; /* So we see the video behind */
-      overflow-y: auto; /* Allow the browser window to scroll normally */
-    }
+      /* Use 'Verdana' as in the video background snippet */
+      body, html {
+        width: 100% !important;
+        min-height: 100% !important; /* Ensure body grows with content */
+        font-family: 'Verdana', sans-serif !important;
+        background-color: transparent !important; /* So we see the video behind */
+        overflow-y: auto !important; /* Allow the browser window to scroll normally */
+      }
 
-    /* Video Background */
-    .video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      object-fit: cover;
-      z-index: -1; /* Ensures video stays behind everything else */
-    }
+      /* Video Background */
+      .video-background {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        min-width: 100% !important;
+        min-height: 100% !important;
+        width: auto !important;
+        height: auto !important;
+        object-fit: cover !important;
+        z-index: -1 !important; /* Ensures video stays behind everything else */
+      }
 
-    /* Main container for the entire portfolio */
-    .loading-screen-container {
-      position: relative; /* Allows absolutely positioned children */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      min-height: 100vh;
-      width: 100%;
-    }
+      /* Main container for the entire portfolio */
+      .loading-screen-container {
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        min-height: 100vh !important;
+        width: 100% !important;
+      }
 
-    /* Dark overlay above the video */
-    .overlay-rectangle {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(12, 9, 9, 0.5); /* 50% black overlay */
-      z-index: 0;
-    }
+      /* Dark overlay above the video */
+      .overlay-rectangle {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background-color: rgba(12, 9, 9, 0.5) !important; /* 50% black overlay */
+        z-index: 0 !important;
+      }
 
-    /* -------------------
-       Portfolio Styles
-    ------------------- */
+      /* -------------------
+        Portfolio Styles
+      ------------------- */
 
-    /* Make all headings red! */
-    h1, h2, h3, h4, h5, h6 {
-      color: #f00 !important;
-    }
+      /* Improve Heading Colors */
+      h1, h2, h3, h4, h5, h6 {
+        color: #1B2A49 !important; /* Deep Navy Blue */
+        font-weight: bold !important;
+      }
 
-    a {
-      color: #00B7FF;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
+      /* Fix Weird Text Spacing */
+      p, li {
+        color: #333 !important; /* Dark gray for readability */
+        line-height: 1.85 !important; /* Adjusted vertical spacing */
+        letter-spacing: 0.2px !important; /* Normalize letter spacing */
+        word-spacing: 0.5px !important; /* Prevent words from spacing out awkwardly */
+        text-align: left !important; /* Ensure consistent alignment */
+        max-width: 700px !important; /* Prevent overly wide text */
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
 
-    /* Projects Section */
-    .project-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-      margin-top: 20px;
-      padding: 0 20px; /* Add side padding so items don't touch the edges */
-      z-index: 2;      /* Ensure these float above the overlay */
-    }
+      /* Force consistent paragraph spacing */
+      p {
+        margin-bottom: 16px !important; /* Ensure proper separation between text blocks */
+      }
 
-    .project-item {
-      flex: 1 1 calc(50% - 20px);
-      max-width: calc(50% - 20px);
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 15px;
-      text-align: center;
-    }
+      /* Fix list item spacing */
+      ul {
+        padding-left: 35px !important; /* Improve indentation */
+        margin-bottom: 20px !important; /* Space out lists */
+      }
 
-    .project-item h3 {
-      margin-bottom: 10px;
-      font-size: 20px;
-      /* color overridden by global heading override above */
-    }
+      ul li {
+        margin-bottom: 12px !important; /* Ensure consistent spacing */
+        padding-left: 5px !important; /* Fix potential text misalignment */
+      }
 
-    .project-img {
-      width: 100%;
-      max-width: 400px;
-      height: auto;
-      max-height: 300px;
-      aspect-ratio: 4 / 3; /* Ensures consistent aspect ratio */
-      margin-bottom: 10px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
+      /* Improve Links */
+      a {
+        color: #0044cc !important; /* Better contrast blue */
+        text-decoration: none !important;
+        font-weight: bold !important;
+        display: inline-block !important; /* Prevent weird spacing issues */
+        margin-bottom: 8px !important;
+      }
 
-    .project-item p,
-    .project-item a {
-      margin: 0.5rem 0;
-      display: block;
-    }
+      a:hover {
+        text-decoration: underline !important;
+        color: #0066ff !important; /* Lighter blue on hover */
+      }
 
-    /* Make “Personal Projects” section fully visible above overlay */
-    section.personal-projects {
-      position: relative;
-      z-index: 2;
-      background-color: #fff; /* White background so it's not dimmed by the overlay */
-      border-radius: 8px;
-      margin: 40px auto; /* Center with top/bottom spacing */
-      max-width: 1200px; /* Wider container if desired */
-      padding: 20px;     /* Spacing inside the box */
-    }
+      /* Projects Section */
+      .project-grid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 20px !important;
+        justify-content: center !important;
+        margin-top: 20px !important;
+        padding: 0 20px !important;
+        z-index: 2 !important;
+      }
 
-    /* Responsive Design */
-    @media (max-width: 768px) {
+      /* Project Item */
       .project-item {
-        flex: 1 1 100%; /* Stack items vertically */
-        max-width: 100%;
+        flex: 1 1 calc(50% - 20px) !important;
+        max-width: calc(50% - 20px) !important;
+        background: #F5F5DC !important; /* Light cream background */
+        border-radius: 12px !important;
+        padding: 24px !important;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1) !important;
+        text-align: left !important;
+        transition: transform 0.3s ease-in-out !important;
       }
 
-      .project-item p,
-      .project-item a {
-        margin: 0.5rem 0;
-        display: block;
+      .project-item:hover {
+        transform: scale(1.02) !important; /* Slight hover effect */
       }
 
+      /* Project Title */
+      .project-item h3 {
+        margin-bottom: 12px !important;
+        font-size: 22px !important;
+        color: #1B2A49 !important; /* Deep Navy Blue */
+        font-weight: bold !important;
+      }
+
+      /* Improve Image Layout */
       .project-img {
-        max-width: 100%;
-        max-height: 200px;
+        width: 100% !important;
+        max-width: 400px !important;
+        height: auto !important;
+        max-height: 300px !important;
+        aspect-ratio: 4 / 3 !important;
+        margin-bottom: 15px !important;
+        border-radius: 8px !important;
+        object-fit: cover !important;
+        transition: transform 0.3s ease-in-out !important;
       }
-    }
+
+      .project-img:hover {
+        transform: scale(1.05) !important; /* Subtle hover zoom */
+      }
+
+      /* Improve Bullet Points */
+      ul li::before {
+        content: "•" !important; /* Custom bullet */
+        color: #1B2A49 !important; /* Deep Navy Blue */
+        font-weight: bold !important;
+        position: absolute !important;
+        left: -20px !important;
+      }
+
+      /* Personal Projects Section */
+      section.personal-projects {
+        position: relative !important;
+        z-index: 2 !important;
+        background-color: #fff !important;
+        border-radius: 8px !important;
+        margin: 40px auto !important;
+        max-width: 1200px !important;
+        padding: 24px !important;
+      }
+
+      /* Ensure text is not too wide */
+      .project-item p,
+      .project-item ul {
+        max-width: 700px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .project-grid {
+          max-width: 90% !important;
+        }
+
+        .project-item {
+          flex: 1 1 100% !important;
+          max-width: 100% !important;
+          margin-bottom: 25px !important;
+          padding: 28px !important;
+        }
+
+        .project-img {
+          max-width: 100% !important;
+          max-height: 200px !important;
+        }
+
+        /* Ensure better spacing for mobile text */
+        p, ul li {
+          line-height: 1.9 !important; /* More spacing for small screens */
+        }
+
+        .project-grid {
+          padding: 0 15px !important;
+        }
+      }
+
+
+
+
 
   //- --------------------------
   //- Video + Overlay
