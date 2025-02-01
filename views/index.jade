@@ -195,7 +195,9 @@ html(lang="en")
               const playPromise = video.play();
 
               if (playPromise !== undefined) {
-                  playPromise.catch(() => {
+                  playPromise.then(() => {
+                      console.log('Autoplay successful');
+                  }).catch(() => {
                       console.warn('Autoplay blocked. Adding play button.');
 
                       // Create Play Button
@@ -224,3 +226,4 @@ html(lang="en")
               }
           }
       });
+
