@@ -15,9 +15,10 @@ html(lang="en")
       /* Video Background */
       .video-background {
         position: fixed;
-        top: 0; left: 0;
-        min-width: 100%; min-height: 100%;
-        width: auto; height: auto;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         z-index: -1;
         pointer-events: none;
@@ -38,8 +39,10 @@ html(lang="en")
       /* Overlay */
       .overlay-rectangle {
         position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         background-color: rgba(12, 9, 9, 0.5);
         z-index: 0;
       }
@@ -89,7 +92,8 @@ html(lang="en")
         left: -40px;
         top: 50%;
         transform: translateY(-50%);
-        width: 20px; height: 20px;
+        width: 20px;
+        height: 20px;
         border: 2px solid #0f0;
         border-radius: 50%;
         animation: ping 1.2s infinite;
@@ -132,15 +136,34 @@ html(lang="en")
               | LinkedIn:
               a(href="https://www.linkedin.com/in/joshua-edison-96670b1b4/" target="_blank") LinkedIn Profile
     
-    // Video playback handling
+    // Video playback handling with dynamic resizing
     script.
       document.addEventListener('DOMContentLoaded', function() {
         var video = document.querySelector('.video-background');
+
+        function resizeVideo() {
+          var winW = window.innerWidth,
+              winH = window.innerHeight,
+              // Use the video’s natural dimensions, defaulting to a 16:9 ratio if not yet available
+              vidW = video.videoWidth || 16,
+              vidH = video.videoHeight || 9,
+              videoRatio = vidW / vidH,
+              windowRatio = winW / winH;
+
+          // Adjust the video dimensions based on the aspect ratios
+          if (windowRatio < videoRatio) {
+            video.style.width = 'auto';
+            video.style.height = '100%';
+          } else {
+            video.style.width = '100%';
+            video.style.height = 'auto';
+          }
+        }
+
+        video.addEventListener('loadedmetadata', resizeVideo);
+        window.addEventListener('resize', resizeVideo);
+
         video.play().catch(function(err) {
           console.warn('Autoplay may not be allowed by this browser/device:', err);
-        });
-        video.addEventListener('ended', function() {
-          this.currentTime = 0;
-          this.play();
         });
       });
