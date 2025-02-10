@@ -5,36 +5,27 @@ html(lang="en")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title Contact Me
     style.
-      /* Basic resets */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      /* Reset & base styles */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 100%; height: 100%; overflow: hidden;
+        font-family: Verdana, sans-serif;
       }
-
-      body, html {
-        width: 100%;
-        height: 100%;
-        overflow: hidden; /* Hide scrollbars */
-        font-family: 'Verdana', sans-serif;
-      }
-
+      
       /* Video Background */
       .video-background {
         position: fixed;
-        top: 0;
-        left: 0;
-        min-width: 100%;
-        min-height: 100%;
-        width: auto;
-        height: auto;
+        top: 0; left: 0;
+        min-width: 100%; min-height: 100%;
+        width: auto; height: auto;
         object-fit: cover;
-        z-index: -1; /* Ensures video stays behind everything else */
+        z-index: -1;
+        pointer-events: none;
       }
-
+      
       /* Main container */
       .loading-screen-container {
-        position: relative; /* Allows absolutely positioned children */
+        position: relative;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -43,106 +34,77 @@ html(lang="en")
         color: #f00;
         height: 100vh;
       }
-
-      /* Semi-transparent overlay */
+      
+      /* Overlay */
       .overlay-rectangle {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(12, 9, 9, 0.5); /* Dark overlay at 50% opacity */
-        z-index: 0; /* Behind the text */
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(12, 9, 9, 0.5);
+        z-index: 0;
       }
-
-      /* The animated black rectangle behind the text */
+      
+      /* Animated background rectangle */
       .animated-bg {
         position: relative;
-        z-index: 1;       /* Sits above the overlay but behind text content if needed */
+        z-index: 1;
         background-color: rgba(0, 0, 0, 0.8);
         padding: 2rem;
         border-radius: 8px;
         max-width: 800px;
-        margin: 0 20px;   /* Some side spacing on smaller screens */
-        animation: pulseBg 3s infinite ease-in-out; 
+        margin: 0 20px;
+        animation: pulseBg 3s infinite ease-in-out;
       }
-
-      /* Keyframes for pulsing the rectangle's background opacity */
       @keyframes pulseBg {
-        0%, 100% {
-          background-color: rgba(0, 0, 0, 0.8);
-        }
-        50% {
-          background-color: rgba(0, 0, 0, 0.6);
-        }
+        0%, 100% { background-color: rgba(0, 0, 0, 0.8); }
+        50% { background-color: rgba(0, 0, 0, 0.6); }
       }
-
-      /* Ensure the text is above the black rectangle if needed */
       .animated-bg h1.game-title,
       .animated-bg .contact {
-        position: relative; /* relative so the text is "above" the .animated-bg background */
-        z-index: 2;        
+        position: relative;
+        z-index: 2;
       }
-
-      /* Heading styling (red text + black outline) */
+      
+      /* Heading & contact styling */
       h1.game-title {
         font-size: 3rem;
         text-transform: uppercase;
         margin-bottom: 2rem;
         letter-spacing: 2px;
       }
-
-      /* Red text + black outline for all contact elements */
       h1.game-title,
       .contact,
       .contact a {
         color: #f00;
-        text-shadow: 
-          -1px -1px 0 #000,
-           1px -1px 0 #000,
-          -1px  1px 0 #000,
-           1px  1px 0 #000;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
       }
-
       .contact {
         font-size: 1.1rem;
         line-height: 1.6;
       }
-
-      /* Example animated ring (not used here, but retained for consistency) */
+      
+      /* Unused animated ring (kept for consistency) */
       .selector {
         position: absolute;
         left: -40px;
         top: 50%;
         transform: translateY(-50%);
-        width: 20px;
-        height: 20px;
+        width: 20px; height: 20px;
         border: 2px solid #0f0;
         border-radius: 50%;
         animation: ping 1.2s infinite;
       }
-
       @keyframes ping {
-        0% {
-          transform: scale(1) translateY(-50%);
-          opacity: 1;
-        }
-        75%, 100% {
-          transform: scale(2) translateY(-50%);
-          opacity: 0;
-        }
+        0% { transform: scale(1) translateY(-50%); opacity: 1; }
+        75%, 100% { transform: scale(2) translateY(-50%); opacity: 0; }
       }
-
-      /* Responsive styling for mobile screens */
+      
+      /* Responsive adjustments */
       @media screen and (max-width: 768px) {
-        h1.game-title {
-          font-size: 2rem; /* Smaller heading on mobile */
-        }
+        h1.game-title { font-size: 2rem; }
       }
-
   body
-
-    //- Background video
+    // Background video
     video.video-background(
       autoplay,
       muted,
@@ -150,23 +112,18 @@ html(lang="en")
       playsinline,
       webkit-playsinline,
       disablePictureInPicture,
-      controlsList="nodownload nofullscreen noremoteplayback"
+      controlsList="nodownload nofullscreen noremoteplayback",
       preload="auto"
     )
-      source(src="videos/video.mp4" type="video/mp4")
-
-    //- Main container
+      source(src="videos/video.mp4", type="video/mp4")
+    
+    // Main content container
     .loading-screen-container
-      //- Overlay
       .overlay-rectangle
-
-      //- Animated black rectangle (with text inside)
       .animated-bg
         h1.game-title Contact Me
-
         .contact
-          p
-            | If you’d like to collaborate or learn more about my work, feel free to reach out.
+          p If you’d like to collaborate or learn more about my work, feel free to reach out.
           ul
             li
               | Email:
@@ -174,17 +131,14 @@ html(lang="en")
             li
               | LinkedIn:
               a(href="https://www.linkedin.com/in/joshua-edison-96670b1b4/" target="_blank") LinkedIn Profile
-
+    
+    // Video playback handling
     script.
       document.addEventListener('DOMContentLoaded', function() {
-        const video = document.querySelector('.video-background');
-        
-        // Attempt to programmatically start the video if allowed (some mobile devices require user gesture).
-        video.play().catch(err => {
+        var video = document.querySelector('.video-background');
+        video.play().catch(function(err) {
           console.warn('Autoplay may not be allowed by this browser/device:', err);
         });
-
-        // Fallback in case 'loop' is not honored
         video.addEventListener('ended', function() {
           this.currentTime = 0;
           this.play();
