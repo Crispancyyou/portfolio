@@ -1,233 +1,264 @@
-doctype html
-html(lang="en")
-  head
-    meta(charset="UTF-8")
-    meta(name="viewport" content="width=device-width, initial-scale=1.0")
-    title Josh Edison
-        //- Favicon & App Icons (Works Locally & On Server)
-    link(rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png")
-    link(rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png")
-    link(rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png")
-    link(rel="icon" type="image/x-icon" href="/images/favicon.ico")
-    style.
-      /* Basic resets */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+// ─────────────────────────────────────────────────────────────
+//  views/portfolio.jade  –  full page (Official Projects padded)
+// ─────────────────────────────────────────────────────────────
+extends layout
+
+block content
+
+  // ───────── INLINE STYLESHEET ─────────
+  style.
+      /* ───────── BASIC RESETS ───────── */
+      *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+      html,body{width:100%;min-height:100%;font-family:Verdana,sans-serif;background:#000;overflow-x:hidden;}
+
+      /* video + overlay */
+      .video-background{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;}
+      .overlay-rectangle{position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:-1;}
+
+      /* ───────── HERO (Particles + Typed.js) ───────── */
+      section.hero{position:relative;width:100%;height:80vh;background:#000;display:flex;justify-content:center;align-items:center;overflow:hidden;}
+      #particles-js{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
+      .hero-text{color:#fff;text-align:center;z-index:1;}
+      #typed-text{font-size:2.5rem;font-weight:bold;}
+
+      /* ───────── SKILLS GRID (icon + outline only) ───────── */
+      section.skills{background:#000;padding:3rem 0 1rem;}
+      section.skills>h2{color:#fff;}
+      .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1.75rem;width:90%;max-width:900px;margin:0 auto;}
+
+      .skill-card{
+        width:100px;height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+        border-radius:12px;background:transparent;
+        --g:linear-gradient(130deg,#19c5ff,#ff007d);
+        border:2px solid transparent;background-image:var(--g);
+        background-origin:border-box;background-clip:border-box;
+        transition:transform .3s;
+      }
+      .skill-card:hover{transform:translateY(-6px);}
+      .skill-card img{width:48px;height:48px;object-fit:contain;margin-bottom:.4rem;}
+      .skill-card span{color:#fff;font-size:.85rem;letter-spacing:.5px;}
+
+      /* ───────── TYPOGRAPHY ───────── */
+      h1,h2,h3,h4,h5,h6{color:#fff;font-weight:bold;text-align:center;margin-bottom:1rem;}
+      p,li{color:#ddd;line-height:1.6;max-width:700px;margin:0 auto 1rem;text-align:left;}
+      a{color:#1e90ff;font-weight:bold;text-decoration:none;}a:hover{text-decoration:underline;}
+
+      /* ensure ALL section headings truly centered */
+      section>h2{display:block;text-align:center;color:#fff!important;margin:0 auto 2rem;}
+
+      /* ───────── SECTIONS & HEADERS ───────── */
+      section.projects,
+      section.personal-projects,
+      section.contact{background:#000;padding:4.5rem 0 2rem;}
+      @media(max-width:480px){section.projects{padding-top:3rem;}}
+
+      .project-grid{display:flex;flex-direction:column;align-items:center;gap:2rem;padding:0 1rem;}
+
+      /* ───────── CARD (DESKTOP/TABLET) ───────── */
+      @media(min-width:769px){
+        .project-item{display:flex;flex-direction:row;width:calc(100% - 40px);margin:20px;background:#000;
+          border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:2rem;gap:2rem;
+          box-shadow:0 4px 12px rgba(0,0,0,.6);transition:transform .3s,box-shadow .3s;overflow:visible;}
+        .project-item:hover{transform:translateY(-4px);box-shadow:0 8px 16px rgba(0,0,0,.8);}
+        .project-img{flex:0 0 55%;width:55%;height:auto;border-radius:8px;object-fit:cover;}
+        .project-text{flex:0 0 45%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:1rem;}
       }
 
-      body, html {
-        width: 100%;
-        height: 100%;
-        overflow: hidden; /* Hide scrollbars */
-        font-family: 'Verdana', sans-serif;
+      /* mobile tweaks */
+      @media(max-width:768px){
+        .project-item{flex-direction:column;width:calc(100% - 20px);margin:10px auto;padding:1.5rem;}
+        .project-img,.project-text{width:100%;}.project-text{margin-top:1rem;}
+        h1,h2{font-size:1.5rem;}h3{font-size:1.25rem;}p,li{font-size:.9rem;}
+      }
+      @media(max-width:480px){
+        .project-item{padding:1rem;margin:.5rem auto;}
+        .project-grid{gap:1rem;}
+        h1,h2{font-size:1.25rem;}h3{font-size:1.1rem;}p,li{font-size:.85rem;}
       }
 
-      /* Video Background */
-      .video-background {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        object-fit: cover;
-        z-index: -1; /* Ensures video stays behind everything else */
+      /* ───────── TINY MOD: white/center text in cards ───────── */
+      .project-item h1,.project-item h2,.project-item h3,.project-item h4,
+      .project-item h5,.project-item h6,.project-item p,.project-item li{
+        color:#fff!important;text-align:center!important;max-width:none;margin:.5rem 0;
       }
 
-      /* Main container */
-      .loading-screen-container {
-        position: relative; /* Allows absolutely positioned children */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        color: #f00;
-        height: 100vh;
+      /* ───────── CONTACT SECTION ───────── */
+      section.contact h2{
+        position:relative;font-size:2.3rem;
+      }
+      section.contact h2::after{
+        content:'';position:absolute;left:0;bottom:-.25rem;width:60%;height:.6rem;background:#ff004c;border-radius:3px;
+      }
+      .contact-wrapper{width:90%;max-width:700px;margin:0 auto;}
+      .contact-wrapper p{color:#ddd;margin-bottom:2rem;text-align:left;line-height:1.6;}
+
+      .contact-form input,
+      .contact-form textarea{
+        width:100%;background:#1a1a1a;border:none;border-bottom:2px solid #222;padding:.9rem;color:#fff;
+        font-size:.95rem;font-family:inherit;margin-bottom:.9rem;outline:none;
+      }
+      .contact-form textarea{min-height:170px;resize:vertical;}
+      .contact-form input:focus,
+      .contact-form textarea:focus{border-bottom:2px solid #ff004c;}
+
+      .submit-btn{
+        align-self:flex-end;background:transparent;border:none;color:#fff;letter-spacing:3px;font-weight:bold;cursor:pointer;
+        padding:.6rem 0;position:relative;
+      }
+      .submit-btn::after{
+        content:'';position:absolute;left:0;bottom:-.15rem;width:100%;height:2px;background:#ff004c;
+        transform-origin:left;transition:transform .3s;
+      }
+      .submit-btn:hover::after{transform:scaleX(.6);}
+
+      @media(max-width:480px){
+        section.contact h2{font-size:1.9rem;}
+        .contact-wrapper p{font-size:.9rem;}
       }
 
-      /* Semi-transparent overlay */
-      .overlay-rectangle {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(12, 9, 9, 0.5); /* Dark overlay at 50% opacity */
-        z-index: 0; /* Behind the text and menu */
-      }
-
-      /* Ensure text and menu appear above the overlay */
-      .loading-screen-container h1.game-title,
-      .loading-screen-container .menu {
-        position: relative;
-        z-index: 1;
-      }
-
-      /* "Loading" text or main heading */
-      h1.game-title {
-        font-size: 3rem;
-        text-transform: uppercase;
-        margin-bottom: 2rem;
-        letter-spacing: 2px;
-      }
-
-      /* Menu container */
-      .menu {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-      }
-
-      /* Each menu item */
-      .menu a {
-        position: relative;
-        color: #f00;
-        text-decoration: none;
-        font-size: 1.7rem;
-        font-weight: bold;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        transition: color 0.3s ease;
-      }
-
-      .menu a:hover {
-        color: #0f0; /* Hover color */
-      }
-
-      /* Underline animation effect */
-      .menu a::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: -4px;
-        width: 0;
-        height: 2px;
-        background-color: #0f0;
-        transition: width 0.3s ease;
-      }
-
-      .menu a:hover::after {
-        width: 100%;
-      }
-
-      /* Example animated “selector” (like a pulsing ring) */
-      .selector {
-        position: absolute;
-        left: -40px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 20px;
-        height: 20px;
-        border: 2px solid #0f0;
-        border-radius: 50%;
-        animation: ping 1.2s infinite;
-      }
-
-      h1.game-title,
-      .menu a {
-        color: #f00;
-        text-shadow: 
-          -1px -1px 0 #000,
-          1px -1px 0 #000,
-          -1px  1px 0 #000,
-          1px  1px 0 #000;
-      }
-
-      @keyframes ping {
-        0% {
-          transform: scale(1) translateY(-50%);
-          opacity: 1;
-        }
-        75%, 100% {
-          transform: scale(2) translateY(-50%);
-          opacity: 0;
-        }
-      }
-
-      /* Responsive styling for mobile screens */
-      @media screen and (max-width: 768px) {
-        h1.game-title {
-          font-size: 2rem; /* Smaller heading on mobile */
-        }
-
-        .menu a {
-          font-size: 1.4rem; /* Slightly smaller menu text on mobile */
-        }
-      }
-
-  body
-
-    video.video-background(
-      autoplay,
-      muted,
-      loop,
-      playsinline,
-      webkit-playsinline,   
-      disablePictureInPicture,
-      controlsList="nodownload nofullscreen noremoteplayback"
-      preload="auto"
-    )
-      source(src="videos/video.mp4" type="video/mp4")
-
-    .loading-screen-container
-
-      .overlay-rectangle
-
-      h1.game-title Developer Presents
-      .menu
-        a(href="/portfolio")
-          span.selector
-          | START
 
 
-    script.
+  // ───────── VIDEO & OVERLAY ─────────
+  video.video-background(
+    autoplay muted loop playsinline webkit-playsinline disablePictureInPicture
+    controlsList="nodownload nofullscreen noremoteplayback" preload="auto")
+    source(src="videos/video.mp4" type="video/mp4")
 
-      document.addEventListener('DOMContentLoaded', function() {
-          const video = document.querySelector('.video-background');
+  .loading-screen-container
+    .overlay-rectangle
 
-          if (video) {
-              video.muted = true; // Ensure muted
-              video.playsInline = true; // Ensure inline playback
-              video.load(); // Ensure video is loaded before playing
+  // ───────── HERO (Typed.js + particles.js) ─────────
+  section.hero
+    #particles-js
+    .hero-text
+      h1#typed-text
 
-              // Explicitly attempt to play
-              const playPromise = video.play();
+  // ───────── SKILLS / EXPERIENCED WITH ─────────
+  - var skills=[{src:'/images/html.png',label:'HTML'},{src:'/images/css.png',label:'CSS'},{src:'/images/javascript.png',label:'JAVASCRIPT'},{src:'/images/python.png',label:'PYTHON'},{src:'/images/node.png',label:'NODE.JS'},{src:'/images/express.png',label:'EXPRESS.JS'},{src:'/images/sqlite.png',label:'SQLITE'},{src:'/images/git.png',label:'GIT'},{src:'/images/sql.png',label:'SQL'},{src:'/images/csharp.png',label:'C#'}]
 
-              if (playPromise !== undefined) {
-                  playPromise.catch(() => {
-                      console.warn('Autoplay blocked. Hiding fake play button.');
-
-                      // Create Hidden Play Button (Trick for Mobile Autoplay)
-                      const playButton = document.createElement('button');
-                      playButton.textContent = 'Play Video';
-                      playButton.style.position = 'absolute';
-                      playButton.style.top = '50%';
-                      playButton.style.left = '50%';
-                      playButton.style.transform = 'translate(-50%, -50%)';
-                      playButton.style.zIndex = '2';
-                      playButton.style.padding = '10px 20px';
-                      playButton.style.fontSize = '16px';
-                      playButton.style.cursor = 'pointer';
-                      playButton.style.background = 'rgba(0,0,0,0.7)';
-                      playButton.style.color = '#fff';
-                      playButton.style.border = 'none';
-                      playButton.style.borderRadius = '5px';
-
-                      // Hide the button visually but keep it functional
-                      playButton.style.opacity = '0'; // Makes it invisible
-                      playButton.style.pointerEvents = 'none'; // Prevents interaction
-
-                      playButton.addEventListener('click', () => {
-                          video.play();
-                          playButton.remove();
-                      });
-
-                      document.body.appendChild(playButton);
-                  });
-              }
-          }
-      });
+  section.skills
+    h2 Experienced&nbsp;With
+    .skills-grid
+      each tech in skills
+        .skill-card
+          img(src=tech.src,alt=tech.label)
+          span=tech.label
 
 
+  section.personal-projects
+    h2 Corperate Projects
+    .project-grid
+      .project-item
+        img.project-img(src="/images/paddle.png",alt="Multiplayer Paddle Ball Game")
+        .project-text
+          h3 Routing Tool
+          p Merged drafting workflow for Ontario Power Generation that brings together EC‑record viewing, instant revision previews, one‑click drawing retrieval from network drives, and automated revision numbering.  
+          p It also syncs live with task‑management tools, letting teams merge changes smoothly and avoid conflicts when multiple people work on the same file.
+      .project-item
+        img.project-img(src="/images/house.png",alt="House")
+        .project-text
+          h3 EQCMS Tag Generator
+          p Cross‑checks both the AS9 and local databases to identify available equipment tag numbers, automatically generating new or temporary tags after a double‑verification step.  
+          p Provides full tag management—bulk creation, deletion, and validation—enforcing complex, equipment‑specific numbering rules and delegated logic.
+      .project-item
+        img.project-img(src="/images/discordbot.png",alt="Discord Bot")
+        .project-text
+          h3 RoboCopy
+          p User‑friendly UI wrapper for the Robocopy CLI, built for the 3‑D team to move massive files across the network with automatic retries to prevent corruption or failed transfers.  
+          p Adds a real‑time progress bar, retry notifications, live thread‑count display, and other optimizations that let artists tune performance to their hardware.
+
+
+  // ───────── FREELANCE PROJECTS ─────────
+  section.projects
+    h2 Freelance Projects
+    .project-grid
+      .project-item
+        img.project-img(src="/images/ponderpox.PNG",alt="Ponderpox.ca")
+        .project-text
+          h3 Ponderpox.ca
+          p Advanced waiting list system with secure payments & live chat.
+          a(href="https://ponderpox.ca",target="_blank") Visit
+      .project-item
+        img.project-img(src="/images/scanhaven.PNG",alt="Scanhaven.com")
+        .project-text
+          h3 Scanhaven.com
+          p Corporate site with email automation & service prototype.
+          a(href="https://www.scanhaven.com/osisko",target="_blank") Prototype
+          br
+          a(href="https://scanhaven.com",target="_blank") Visit
+      .project-item
+        img.project-img(src="/images/arrangerush.png",alt="ArrangeRush iOS App")
+        .project-text
+          h3 ArrangeRush (iOS App)
+          p Unity‑built 2D number game for iOS with ads & smooth UI.
+          a(href="https://apps.apple.com/ca/app/arrangerush/id6475200764?platform=ipad",target="_blank") App Store
+      .project-item
+        img.project-img(src="/images/dramaticraft.JPG",alt="Dramaticraft Site")
+        .project-text
+          h3 Dramaticraft Community
+          p Minecraft community site with forums & MariaDB backend.
+          a(href="https://www.dramaticraft.com/",target="_blank") dramaticraft.com
+      .project-item
+        img.project-img(src="/images/dramatic-network.png",alt="Dramatic‑Network")
+        .project-text
+          h3 Dramatic‑Network Gaming Community
+          p Gaming community site focused on simplicity and an intuitive experience.
+          a(href="https://www.dramaticraft.com/",target="_blank") dramatic-network.com
+
+  // ───────── PERSONAL PROJECTS ─────────
+  section.personal-projects
+    h2 Personal Projects
+    .project-grid
+      .project-item
+        img.project-img(src="/images/paddle.png",alt="Multiplayer Paddle Ball Game")
+        .project-text
+          h3 Paddle Ball Game
+          p Multiplayer/singleplayer Node.js web game.
+          a(href="https://ponderpox.ca/game",target="_blank") Play
+      .project-item
+        img.project-img(src="/images/house.png",alt="House")
+        .project-text
+          h3 Automated House Finder
+          p Mass Searches all Homes in Canada with given filters with fast previews.
+          a(href="https://icloud-vy7f.onrender.com/",target="_blank") View in Github
+      .project-item
+        img.project-img(src="/images/discordbot.png",alt="Discord Bot")
+        .project-text
+          h3 Multi‑Utility Discord Bot
+          p Node.js bot for music, news, and live sports feeds.
+      .project-item
+        img.project-img(src="/images/gptclone.png",alt="Python Gram AI")
+        .project-text
+          h3 ChatGpt Clone With Image features and programming capabilities
+          p AI‑powered GPT Clone With image features and programming capabilities.
+          a(href="https://timecheck-q8o0.onrender.com/",target="_blank") Test With Code "Josh"
+
+  // ───────── CONTACT ─────────
+  section.contact#contact
+    h2 Contact
+    .contact-wrapper
+      p Have a question or want to work together?&nbsp;Leave your details and I'll get back to you as soon as possible.
+      form.contact-form(method="POST" action="/contact")
+        input(type="text" name="name" placeholder="Name" required)
+        input(type="email" name="email" placeholder="Email" required)
+        textarea(name="message" placeholder="Message" required)
+        button.submit-btn(type="submit") SUBMIT
+
+  // ───────── JS (keep card flex‑direction) ─────────
+  script.
+    document.addEventListener('DOMContentLoaded',()=>{
+      const items=document.querySelectorAll('.project-item');
+      const adjust=()=>items.forEach(i=>i.style.flexDirection=window.innerWidth<=768?'column':'row');
+      window.addEventListener('resize',adjust);adjust();
+    });
+
+  // ───────── LIBRARIES ─────────
+  script(src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12")
+  script(src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js")
+
+  // ───────── INIT Typed.js & particles.js ─────────
+  script.
+    window.addEventListener('load',()=>{
+      new Typed('#typed-text',{strings:["Hello, I'm Josh.","I'm a Electro-Mechanical Technician who has a passion for Full‑Stack development!","With a desire to make great things by combining the two...","Welcome to my portfolio!"],typeSpeed:60,backSpeed:30,backDelay:1500,loop:true});
+      particlesJS('particles-js',{particles:{number:{value:120},color:{value:'#1e90ff'},shape:{type:'circle'},opacity:{value:0.7},size:{value:3},line_linked:{enable:true,distance:150,color:'#1e90ff',opacity:0.4,width:1},move:{enable:true,speed:2,direction:'none',out_mode:'bounce'}},interactivity:{detect_on:'canvas',events:{onhover:{enable:true,mode:'repulse'},onclick:{enable:true,mode:'push'}},modes:{repulse:{distance:120,duration:0.4},push:{particles_nb:4}}},retina_detect:true});
+    });
