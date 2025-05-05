@@ -1,382 +1,264 @@
+// ─────────────────────────────────────────────────────────────
+//  views/portfolio.jade  –  full page (Official Projects padded)
+// ─────────────────────────────────────────────────────────────
 extends layout
 
 block content
 
-  //- Import External Stylesheet
-
-
-
+  // ───────── INLINE STYLESHEET ─────────
   style.
+      /* ───────── BASIC RESETS ───────── */
+      *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+      html,body{width:100%;min-height:100%;font-family:Verdana,sans-serif;background:#000;overflow-x:hidden;}
 
-      /* Basic resets */
-      * {
-        margin: 0 !important;
-        padding: 0 !important;
-        box-sizing: border-box !important;
+      /* video + overlay */
+      .video-background{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;}
+      .overlay-rectangle{position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:-1;}
+
+      /* ───────── HERO (Particles + Typed.js) ───────── */
+      section.hero{position:relative;width:100%;height:80vh;background:#000;display:flex;justify-content:center;align-items:center;overflow:hidden;}
+      #particles-js{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
+      .hero-text{color:#fff;text-align:center;z-index:1;}
+      #typed-text{font-size:2.5rem;font-weight:bold;}
+
+      /* ───────── SKILLS GRID (icon + outline only) ───────── */
+      section.skills{background:#000;padding:3rem 0 1rem;}
+      section.skills>h2{color:#fff;}
+      .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1.75rem;width:90%;max-width:900px;margin:0 auto;}
+
+      .skill-card{
+        width:100px;height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+        border-radius:12px;background:transparent;
+        --g:linear-gradient(130deg,#19c5ff,#ff007d);
+        border:2px solid transparent;background-image:var(--g);
+        background-origin:border-box;background-clip:border-box;
+        transition:transform .3s;
+      }
+      .skill-card:hover{transform:translateY(-6px);}
+      .skill-card img{width:48px;height:48px;object-fit:contain;margin-bottom:.4rem;}
+      .skill-card span{color:#fff;font-size:.85rem;letter-spacing:.5px;}
+
+      /* ───────── TYPOGRAPHY ───────── */
+      h1,h2,h3,h4,h5,h6{color:#fff;font-weight:bold;text-align:center;margin-bottom:1rem;}
+      p,li{color:#ddd;line-height:1.6;max-width:700px;margin:0 auto 1rem;text-align:left;}
+      a{color:#1e90ff;font-weight:bold;text-decoration:none;}a:hover{text-decoration:underline;}
+
+      /* ensure ALL section headings truly centered */
+      section>h2{display:block;text-align:center;color:#fff!important;margin:0 auto 2rem;}
+
+      /* ───────── SECTIONS & HEADERS ───────── */
+      section.projects,
+      section.personal-projects,
+      section.contact{background:#000;padding:4.5rem 0 2rem;}
+      @media(max-width:480px){section.projects{padding-top:3rem;}}
+
+      .project-grid{display:flex;flex-direction:column;align-items:center;gap:2rem;padding:0 1rem;}
+
+      /* ───────── CARD (DESKTOP/TABLET) ───────── */
+      @media(min-width:769px){
+        .project-item{display:flex;flex-direction:row;width:calc(100% - 40px);margin:20px;background:#000;
+          border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:2rem;gap:2rem;
+          box-shadow:0 4px 12px rgba(0,0,0,.6);transition:transform .3s,box-shadow .3s;overflow:visible;}
+        .project-item:hover{transform:translateY(-4px);box-shadow:0 8px 16px rgba(0,0,0,.8);}
+        .project-img{flex:0 0 55%;width:55%;height:auto;border-radius:8px;object-fit:cover;}
+        .project-text{flex:0 0 45%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:1rem;}
       }
 
-      /* Use 'Verdana' as in the video background snippet */
-      body, html {
-        width: 100% !important;
-        min-height: 100% !important;
-        font-family: 'Verdana', sans-serif !important;
-        background-color: transparent !important;
-        overflow-y: auto !important;
+      /* mobile tweaks */
+      @media(max-width:768px){
+        .project-item{flex-direction:column;width:calc(100% - 20px);margin:10px auto;padding:1.5rem;}
+        .project-img,.project-text{width:100%;}.project-text{margin-top:1rem;}
+        h1,h2{font-size:1.5rem;}h3{font-size:1.25rem;}p,li{font-size:.9rem;}
+      }
+      @media(max-width:480px){
+        .project-item{padding:1rem;margin:.5rem auto;}
+        .project-grid{gap:1rem;}
+        h1,h2{font-size:1.25rem;}h3{font-size:1.1rem;}p,li{font-size:.85rem;}
       }
 
-      /* Video Background */
-      .video-background {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        min-width: 100% !important;
-        min-height: 100% !important;
-        width: auto !important;
-        height: auto !important;
-        object-fit: cover !important;
-        z-index: -1 !important;
+      /* ───────── TINY MOD: white/center text in cards ───────── */
+      .project-item h1,.project-item h2,.project-item h3,.project-item h4,
+      .project-item h5,.project-item h6,.project-item p,.project-item li{
+        color:#fff!important;text-align:center!important;max-width:none;margin:.5rem 0;
       }
 
-      /* Main container for the entire portfolio */
-      .loading-screen-container {
-        position: relative !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        text-align: center !important;
-        min-height: 100vh !important;
-        width: 100% !important;
+      /* ───────── CONTACT SECTION ───────── */
+      section.contact h2{
+        position:relative;font-size:2.3rem;
       }
-
-      /* Dark overlay above the video */
-      .overlay-rectangle {
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        background-color: rgba(12, 9, 9, 0.5) !important;
-        z-index: 0 !important;
+      section.contact h2::after{
+        content:'';position:absolute;left:0;bottom:-.25rem;width:60%;height:.6rem;background:#ff004c;border-radius:3px;
       }
+      .contact-wrapper{width:90%;max-width:700px;margin:0 auto;}
+      .contact-wrapper p{color:#ddd;margin-bottom:2rem;text-align:left;line-height:1.6;}
 
-      /* -------------------
-        Portfolio Styles
-      ------------------- */
-
-      /* Improve Heading Colors */
-      h1, h2, h3, h4, h5, h6 {
-        color: #1B2A49 !important;
-        font-weight: bold !important;
-        text-align: center !important;
+      .contact-form input,
+      .contact-form textarea{
+        width:100%;background:#1a1a1a;border:none;border-bottom:2px solid #222;padding:.9rem;color:#fff;
+        font-size:.95rem;font-family:inherit;margin-bottom:.9rem;outline:none;
       }
+      .contact-form textarea{min-height:170px;resize:vertical;}
+      .contact-form input:focus,
+      .contact-form textarea:focus{border-bottom:2px solid #ff004c;}
 
-      /* Fix Text Spacing */
-      p, li {
-        color: #333 !important;
-        line-height: 1.85 !important;
-        letter-spacing: 0.2px !important;
-        word-spacing: 0.5px !important;
-        text-align: left !important;
-        max-width: 700px !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
+      .submit-btn{
+        align-self:flex-end;background:transparent;border:none;color:#fff;letter-spacing:3px;font-weight:bold;cursor:pointer;
+        padding:.6rem 0;position:relative;
       }
-
-      /* Force consistent paragraph spacing */
-      p {
-        margin-bottom: 16px !important;
+      .submit-btn::after{
+        content:'';position:absolute;left:0;bottom:-.15rem;width:100%;height:2px;background:#ff004c;
+        transform-origin:left;transition:transform .3s;
       }
+      .submit-btn:hover::after{transform:scaleX(.6);}
 
-      /* Fix list item spacing */
-      ul {
-        padding-left: 5px !important;
-        margin-bottom: 10px !important;
-      }
-
-      ul li {
-        margin-bottom: 2px !important;
-        padding-left: 2px !important;
-      }
-
-      /* Improve Links */
-      a {
-        color: #0044cc !important;
-        text-decoration: none !important;
-        font-weight: bold !important;
-        display: inline-block !important;
-        margin-bottom: 8px !important;
-      }
-
-      a:hover {
-        text-decoration: underline !important;
-        color: #0066ff !important;
-      }
-
-      /* Projects Section */
-      .project-grid {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        align-items: flex-start !important;
-        margin-top: 20px !important;
-        padding: 0 20px !important;
-        z-index: 2 !important;
-      }
-
-      /*
-        By default (on tablets, desktops, etc.), 
-        show two columns by giving each project ~50% width.
-      */
-      .project-item {
-        flex: 0 0 calc(50% - 40px) !important; /* two columns on bigger screens */
-        margin: 20px !important;
-        background: #F5F5DC !important;
-        border-radius: 12px !important;
-        padding: 24px !important;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1) !important;
-        text-align: center !important;
-        transition: transform 0.3s ease-in-out !important;
-      }
-
-      .project-item:hover {
-        transform: scale(1.02) !important;
-      }
-
-      /* Project Title */
-      .project-item h3 {
-        margin-bottom: 12px !important;
-        font-size: 22px !important;
-        color: #1B2A49 !important;
-        font-weight: bold !important;
-        text-align: center !important;
-      }
-
-      /* Improve Image Layout */
-      .project-img {
-        width: 100% !important;
-        max-width: 500px !important;
-        height: auto !important;
-        aspect-ratio: 4 / 3 !important;
-        margin-bottom: 15px !important;
-        border-radius: 8px !important;
-        object-fit: cover !important;
-        transition: transform 0.3s ease-in-out !important;
-      }
-
-      .project-img:hover {
-        transform: scale(1.05) !important;
-      }
-
-      /* Improve Bullet Points */
-      ul li::before {
-        content: "•" !important;
-        color: #1B2A49 !important;
-        font-weight: bold !important;
-        position: absolute !important;
-        left: -20px !important;
-      }
-
-      /* Personal Projects Section */
-      section.personal-projects {
-        position: relative !important;
-        z-index: 2 !important;
-        background-color: #fff !important;
-        border-radius: 8px !important;
-        margin: 40px auto !important;
-        max-width: 1200px !important;
-        padding: 24px !important;
-      }
-
-      /* Ensure text is not too wide */
-      .project-item p,
-      .project-item ul {
-        max-width: 700px !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-      }
-
-      /* --------
-        Responsive Adjustments
-      --------- */
-
-      /*
-        On screens <= 768px (mobile-ish),
-        stack projects with full width
-      */
-      @media (max-width: 768px) {
-        .project-item {
-          flex: 0 0 calc(100% - 40px) !important;
-          margin: 20px !important;
-        }
-
-        .project-img {
-          max-width: 90% !important;
-          margin: 0 auto 15px auto !important;
-        }
-
-        p, ul li {
-          line-height: 1.9 !important;
-        }
-      }
-
-      /* Even smaller phones */
-      @media (max-width: 480px) {
-        .project-grid {
-          padding: 0 5px !important;
-        }
-
-        .project-item {
-          width: calc(100% - 20px) !important;
-          padding: 20px !important;
-          margin: 10px !important; /* Tweak margin if needed */
-        }
-
-        .project-img {
-          max-width: 100% !important;
-          max-height: 180px !important;
-        }
-
-        h1, h2, h3 {
-          font-size: 20px !important;
-        }
-
-        p {
-          font-size: 14px !important;
-        }
+      @media(max-width:480px){
+        section.contact h2{font-size:1.9rem;}
+        .contact-wrapper p{font-size:.9rem;}
       }
 
 
 
-
-
-  //- --------------------------
-  //- Video + Overlay
-  //- --------------------------
+  // ───────── VIDEO & OVERLAY ─────────
   video.video-background(
-    autoplay
-    muted
-    loop
-    playsinline
-    webkit-playsinline
-    disablePictureInPicture
-    controlsList="nodownload nofullscreen noremoteplayback"
-    preload="auto"
-  )
+    autoplay muted loop playsinline webkit-playsinline disablePictureInPicture
+    controlsList="nodownload nofullscreen noremoteplayback" preload="auto")
     source(src="videos/video.mp4" type="video/mp4")
 
   .loading-screen-container
     .overlay-rectangle
 
+  // ───────── HERO (Typed.js + particles.js) ─────────
+  section.hero
+    #particles-js
+    .hero-text
+      h1#typed-text
 
-    //- Projects Section
-    section.projects
-      h2 Offical Projects
-      .project-grid
-        .project-item
+  // ───────── SKILLS / EXPERIENCED WITH ─────────
+  - var skills=[{src:'/images/html.png',label:'HTML'},{src:'/images/css.png',label:'CSS'},{src:'/images/javascript.png',label:'JAVASCRIPT'},{src:'/images/python.png',label:'PYTHON'},{src:'/images/node.png',label:'NODE.JS'},{src:'/images/express.png',label:'EXPRESS.JS'},{src:'/images/sqlite.png',label:'SQLITE'},{src:'/images/git.png',label:'GIT'},{src:'/images/sql.png',label:'SQL'},{src:'/images/csharp.png',label:'C#'}]
+
+  section.skills
+    h2 Experienced&nbsp;With
+    .skills-grid
+      each tech in skills
+        .skill-card
+          img(src=tech.src,alt=tech.label)
+          span=tech.label
+
+
+  section.personal-projects
+    h2 Corperate Projects
+    .project-grid
+      .project-item
+        img.project-img(src="/images/paddle.png",alt="Multiplayer Paddle Ball Game")
+        .project-text
+          h3 Routing Tool
+          p Merged drafting workflow for Ontario Power Generation that brings together EC‑record viewing, instant revision previews, one‑click drawing retrieval from network drives, and automated revision numbering.  
+          p It also syncs live with task‑management tools, letting teams merge changes smoothly and avoid conflicts when multiple people work on the same file.
+      .project-item
+        img.project-img(src="/images/house.png",alt="House")
+        .project-text
+          h3 EQCMS Tag Generator
+          p Cross‑checks both the AS9 and local databases to identify available equipment tag numbers, automatically generating new or temporary tags after a double‑verification step.  
+          p Provides full tag management—bulk creation, deletion, and validation—enforcing complex, equipment‑specific numbering rules and delegated logic.
+      .project-item
+        img.project-img(src="/images/discordbot.png",alt="Discord Bot")
+        .project-text
+          h3 RoboCopy
+          p User‑friendly UI wrapper for the Robocopy CLI, built for the 3‑D team to move massive files across the network with automatic retries to prevent corruption or failed transfers.  
+          p Adds a real‑time progress bar, retry notifications, live thread‑count display, and other optimizations that let artists tune performance to their hardware.
+
+
+  // ───────── FREELANCE PROJECTS ─────────
+  section.projects
+    h2 Freelance Projects
+    .project-grid
+      .project-item
+        img.project-img(src="/images/ponderpox.PNG",alt="Ponderpox.ca")
+        .project-text
           h3 Ponderpox.ca
-          img.project-img(src="/images/ponderpox.PNG" alt="Ponderpox Project Image")
-          p Developed an advanced waiting list management system with features such as:
-            ul(style="list-style: disc outside; padding-left: 40px; text-align: left;")
-              li Secure payment processing with automated email notifications and personalized links.
-              li Real-time live chat functionality for instant messaging between users and artists.
-              li Backend system to manage user data, queue prioritization, and status tracking.
-              li Responsive user interface ensuring a seamless experience across devices.
-          p Utilized technologies including GitHub for version control, Node.js for backend development, domain management tools, and Nodemailer for automated email services.
-          p
-            | View Project:
-            a(href="https://ponderpox.ca" target="_blank") ponderpox.ca
-
-        .project-item
+          p Advanced waiting list system with secure payments & live chat.
+          a(href="https://ponderpox.ca",target="_blank") Visit
+      .project-item
+        img.project-img(src="/images/scanhaven.PNG",alt="Scanhaven.com")
+        .project-text
           h3 Scanhaven.com
-          img.project-img(src="/images/scanhaven.PNG" alt="Scanhaven Project Image")
-          p Built a corporate website using Node.js, supporting multiple services and functionalities. Key features include:
-            ul(style="list-style: disc outside; padding-left: 40px; text-align: left;")
-              li Integrated Nodemailer for automated and secure email communications.
-              li Designed a user-friendly interface to showcase services and goals.
-              li Created and integrated a prototype of proprietary software.
-              li Developed backend systems for efficient data management and user interactions.
-          p A prototype of the software can be accessed at:
-            a(href="https://www.scanhaven.com/osisko" target="_blank") https://www.scanhaven.com/osisko
-          p
-            | View Project:
-            a(href="https://scanhaven.com" target="_blank") scanhaven.com
+          p Corporate site with email automation & service prototype.
+          a(href="https://www.scanhaven.com/osisko",target="_blank") Prototype
+          br
+          a(href="https://scanhaven.com",target="_blank") Visit
+      .project-item
+        img.project-img(src="/images/arrangerush.png",alt="ArrangeRush iOS App")
+        .project-text
+          h3 ArrangeRush (iOS App)
+          p Unity‑built 2D number game for iOS with ads & smooth UI.
+          a(href="https://apps.apple.com/ca/app/arrangerush/id6475200764?platform=ipad",target="_blank") App Store
+      .project-item
+        img.project-img(src="/images/dramaticraft.JPG",alt="Dramaticraft Site")
+        .project-text
+          h3 Dramaticraft Community
+          p Minecraft community site with forums & MariaDB backend.
+          a(href="https://www.dramaticraft.com/",target="_blank") dramaticraft.com
+      .project-item
+        img.project-img(src="/images/dramatic-network.png",alt="Dramatic‑Network")
+        .project-text
+          h3 Dramatic‑Network Gaming Community
+          p Gaming community site focused on simplicity and an intuitive experience.
+          a(href="https://www.dramaticraft.com/",target="_blank") dramatic-network.com
 
-        .project-item
-          h3 ArrangeRush (iOS App)
-          img.project-img(src="/images/Capture.JPG" alt="ArrangeRush Project Image")
-          p Designed and developed a 2D number-based mobile game inspired by popular games like 2048, built using Unity and exported to iOS:
-            ul(style="list-style: disc outside; padding-left: 40px; text-align: left;")
-              li Includes multiple game modes to keep players engaged with varying challenges.
-              li Features smooth animations and visually appealing graphics to enhance user experience.
-              li Simple and intuitive gameplay mechanics designed to appeal to a wide audience.
-              li Incorporates advertisements for monetization, implemented seamlessly within the app.
-              li Designed with a responsive user interface for optimal experience across iPhone and iPad devices.
-          p The app offers a casual gaming experience with engaging mechanics, perfect for quick play sessions.
-          p View on App Store:
-            a(href="https://apps.apple.com/ca/app/arrangerush/id6475200764?platform=ipad" target="_blank") ArrangeRush (iOS App)
-
-        .project-item
-          h3 Dramaticraft Community Website
-          img.project-img(src="/images/dramaticraft.JPG" alt="Dramaticraft Project Image")
-          p Created a community website for a Minecraft server to enhance user interaction and engagement:
-            ul(style="list-style: disc outside; padding-left: 40px; text-align: left;")
-              li Designed and developed using Apache, PHP, HTML, CSS, and JavaScript.
-              li Integrated with a MariaDB database for user accounts, forums, and server stats management.
-              li Utilized phpMyAdmin for efficient database administration and troubleshooting.
-              li Built an intuitive forum and user management system tailored to community needs.
-              li Ensured responsive design for seamless use across all devices.
-          p Hosted on a Linux server running MariaDB version 10.6.18 for efficient and secure database operations.
-          p
-            | View Project:
-            a(href="https://www.dramaticraft.com/" target="_blank") dramaticraft.com
-
-    //- Personal Projects Section
-    section.personal-projects
-      h2 Personal Projects
-      .project-grid
-        .project-item
+  // ───────── PERSONAL PROJECTS ─────────
+  section.personal-projects
+    h2 Personal Projects
+    .project-grid
+      .project-item
+        img.project-img(src="/images/paddle.png",alt="Multiplayer Paddle Ball Game")
+        .project-text
           h3 Paddle Ball Game
-          a.project-link(href="https://ponderpox.ca/game" target="_blank")
-            | View the Paddle Ball Game
-          p A test using Node.js to create a multiplayer and singleplayer game in web-app format.
+          p Multiplayer/singleplayer Node.js web game.
+          a(href="https://ponderpox.ca/game",target="_blank") Play
+      .project-item
+        img.project-img(src="/images/house.png",alt="House")
+        .project-text
+          h3 Automated House Finder
+          p Mass Searches all Homes in Canada with given filters with fast previews.
+          a(href="https://icloud-vy7f.onrender.com/",target="_blank") View in Github
+      .project-item
+        img.project-img(src="/images/discordbot.png",alt="Discord Bot")
+        .project-text
+          h3 Multi‑Utility Discord Bot
+          p Node.js bot for music, news, and live sports feeds.
+      .project-item
+        img.project-img(src="/images/gptclone.png",alt="Python Gram AI")
+        .project-text
+          h3 ChatGpt Clone With Image features and programming capabilities
+          p AI‑powered GPT Clone With image features and programming capabilities.
+          a(href="https://timecheck-q8o0.onrender.com/",target="_blank") Test With Code "Josh"
 
-        .project-item
-          h3 Icloud Downloader
-          a.project-link(href="https://icloud-vy7f.onrender.com/" target="_blank")
-            | View ICloud Downloader
-          p Built to Mass Export iCloud Photos into a downloadable zip in a secure way (must use 2FA).
+  // ───────── CONTACT ─────────
+  section.contact#contact
+    h2 Contact
+    .contact-wrapper
+      p Have a question or want to work together?&nbsp;Leave your details and I'll get back to you as soon as possible.
+      form.contact-form(method="POST" action="/contact")
+        input(type="text" name="name" placeholder="Name" required)
+        input(type="email" name="email" placeholder="Email" required)
+        textarea(name="message" placeholder="Message" required)
+        button.submit-btn(type="submit") SUBMIT
 
-        .project-item
-          h3 Multi-Utility Discord Bot
-          p Designed a Discord bot for personal use with friends, combining multiple features:
-          ul
-            li Streaming music by converting YouTube videos to MP3 and having the bot join voice calls.
-            li Scraping news articles from various sources for quick updates.
-            li Fetching live sports data like scores and game updates in real-time.
-          p The bot is designed to run seamlessly on a web server for consistent availability, using APIs and a Node.js backend for functionality.
+  // ───────── JS (keep card flex‑direction) ─────────
+  script.
+    document.addEventListener('DOMContentLoaded',()=>{
+      const items=document.querySelectorAll('.project-item');
+      const adjust=()=>items.forEach(i=>i.style.flexDirection=window.innerWidth<=768?'column':'row');
+      window.addEventListener('resize',adjust);adjust();
+    });
 
-        .project-item
-          h3 Python Gram: Code Generator
-          a.project-link(href="https://github.com/Crispancyyou/PythonProgrammerAi" target="_blank")
-            | View Python Program AI
-          p Developed a Python program utilizing OpenAI's o3-mini that auto-generates Python scripts.
-          p It automatically installs dependencies and streamlines the creation of single-script Python applications.
+  // ───────── LIBRARIES ─────────
+  script(src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12")
+  script(src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js")
 
-
-    //- Inline JavaScript for Dynamic Layout
-    script.
-      document.addEventListener("DOMContentLoaded", function() {
-        const projectGrid = document.querySelector(".project-grid");
-        const projectItems = document.querySelectorAll(".project-item");
-
-        const adjustGrid = () => {
-          const isMobile = window.innerWidth <= 768;
-          projectItems.forEach(item => {
-            item.style.flex = isMobile ? "1 1 100%" : "1 1 calc(50% - 20px)";
-            item.style.maxWidth = isMobile ? "100%" : "calc(50% - 20px)";
-          });
-        };
-
-        window.addEventListener("resize", adjustGrid);
-        adjustGrid();
-      });
+  // ───────── INIT Typed.js & particles.js ─────────
+  script.
+    window.addEventListener('load',()=>{
+      new Typed('#typed-text',{strings:["Hello, I'm Josh.","I'm a Electro-Mechanical Technician who has a passion for Full‑Stack development!","With a desire to make great things by combining the two...","Welcome to my portfolio!"],typeSpeed:60,backSpeed:30,backDelay:1500,loop:true});
+      particlesJS('particles-js',{particles:{number:{value:120},color:{value:'#1e90ff'},shape:{type:'circle'},opacity:{value:0.7},size:{value:3},line_linked:{enable:true,distance:150,color:'#1e90ff',opacity:0.4,width:1},move:{enable:true,speed:2,direction:'none',out_mode:'bounce'}},interactivity:{detect_on:'canvas',events:{onhover:{enable:true,mode:'repulse'},onclick:{enable:true,mode:'push'}},modes:{repulse:{distance:120,duration:0.4},push:{particles_nb:4}}},retina_detect:true});
+    });
