@@ -64,6 +64,16 @@ block content
         .project-text{flex:0 0 45%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:1rem;}
       }
 
+      /* ───────── FIX → text-only project cards use full width ───────── */
+      /* modern browsers */
+      @supports(selector(:has(*))){
+        .project-item:not(:has(img)){flex-direction:column;text-align:center;}
+        .project-item:not(:has(img)) .project-text{flex:1 1 100%;}
+      }
+      /* fallback for browsers without :has() — just add .no-img to the item */
+      .project-item.no-img{flex-direction:column;text-align:center;}
+      .project-item.no-img .project-text{flex:1 1 100%;}
+
       /* mobile tweaks */
       @media(max-width:768px){
         .project-item{flex-direction:column;width:calc(100% - 20px);margin:10px auto;padding:1.5rem;}
@@ -118,6 +128,7 @@ block content
 
 
 
+
   // ───────── VIDEO & OVERLAY ─────────
   video.video-background(
     autoplay muted loop playsinline webkit-playsinline disablePictureInPicture
@@ -149,12 +160,6 @@ block content
     h2 Corperate Projects
     .project-grid
       .project-item
-        img.project-img(src="/images/robocopy.png",alt="Robocopy")
-        .project-text
-          h3 RoboCopy
-          p User‑friendly UI wrapper for the Robocopy CLI, built for the 3‑D team to move massive files across the network with automatic retries to prevent corruption or failed transfers.  
-          p Adds a real‑time progress bar, retry notifications, live thread‑count display, and other optimizations that let artists tune performance to their hardware.
-      .project-item
         .project-text
           h3 Routing Tool
           p Merged drafting workflow for Ontario Power Generation that brings together EC‑record viewing, instant revision previews, one‑click drawing retrieval from network drives, and automated revision numbering.  
@@ -164,7 +169,12 @@ block content
           h3 EQCMS Tag Generator
           p Cross‑checks both the AS9 and local databases to identify available equipment tag numbers, automatically generating new or temporary tags after a double‑verification step.  
           p Provides full tag management—bulk creation, deletion, and validation—enforcing complex, equipment‑specific numbering rules and delegated logic.
-
+      .project-item
+        img.project-img(src="/images/robocopy.png",alt="Robocopy")
+        .project-text
+          h3 RoboCopy
+          p User‑friendly UI wrapper for the Robocopy CLI, built for the 3‑D team to move massive files across the network with automatic retries to prevent corruption or failed transfers.  
+          p Adds a real‑time progress bar, retry notifications, live thread‑count display, and other optimizations that let artists tune performance to their hardware.
 
 
   // ───────── FREELANCE PROJECTS ─────────
