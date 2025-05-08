@@ -243,15 +243,59 @@ block content
           a(href="https://timecheck-q8o0.onrender.com/",target="_blank") Test With Code "Josh"
 
   // ───────── CONTACT ─────────
+  // ───────── CONTACT ─────────
   section.contact#contact
     h2 Contact
     .contact-wrapper
-      p Have a question or want to work together?&nbsp;Leave your details and I'll get back to you as soon as possible.
-      form.contact-form(method="POST" action="/contact")
-        input(type="text" name="name" placeholder="Name" required)
-        input(type="email" name="email" placeholder="Email" required)
-        textarea(name="message" placeholder="Message" required)
-        button.submit-btn(type="submit") SUBMIT
+      p Have a question or want to work together? Leave your details and I'll get back to you as soon as possible.
+      form.contact-form#contactForm
+        // required by Formspree
+        input(type="hidden" name="_subject" value="📬 New message from website")
+        
+        label(for="email") Your email:
+        input#email(type="email" name="email" placeholder="you@domain.com" required)
+
+        label(for="message") Your message:
+        textarea#message(name="message" placeholder="Your message…" required)
+
+        button.submit-btn(type="submit") Send
+
+      .form-status(style="display:none; margin-top:1rem; color:#fff;")
+
+  //─ AJAX handler (place at bottom of your page, before </body>) ─
+  script.
+    (()=>{
+      const form      = document.getElementById('contactForm');
+      const statusMsg = document.querySelector('.form-status');
+      const endpoint  = 'https://formspree.io/f/mjkwrokk';
+
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        const data = new FormData(form);
+
+        try {
+          let res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' },
+            body: data
+          });
+
+          if (res.ok) {
+            statusMsg.textContent = '✅ Message sent! Thanks for reaching out.';
+            statusMsg.style.display = 'block';
+            form.reset();
+          } else {
+            let err = await res.json();
+            throw new Error(err.error || 'Submission failed');
+          }
+        } catch (err) {
+          statusMsg.textContent = '❌ Oops—something went wrong. Please try again later.';
+          statusMsg.style.display = 'block';
+          console.error(err);
+        }
+      });
+    })();
+
 
   // ───────── JS (keep card flex‑direction) ─────────
   script.
